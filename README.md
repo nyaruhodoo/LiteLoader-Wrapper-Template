@@ -1,26 +1,11 @@
 # 写在最前
 
-测试版本 **9.9.15-28327**
+测试版本 **9.9.15-28971**
 
 由于 26909 版本后 wrapper 有很大改动，导致该模板并不能同时支持之前版本  
-并且由于 NapCatCore 已被入土，在使用时难免会遇到一些不如意的问题  
-~~参数错误、类型错误、这个API压根不存在~~  
+如果你一定要使用可以参考历史版本，具体哪个commit我自己也忘了
 
-不过你也不用太过担心，实际上本项目与 NapCatCore 并不具备什么依赖性  
-~~我经常在想为什么这个项目要叫做 NapCatCore-Template~~  
-引入它的目的只是为了有个好心人帮我们整理 API 以及相关参数，让我举个小栗子
-
-```ts
-// 如果 NTcore 中有这个API，那么你就可开心的直接调用
-const { result, errMsg } = await NTcore.ApiMsg.xxx()
-
-// 如果你想用的API不存在，你也可以直接引用 session 自行处理，自己做好类型支持就是了
-const { result, errMsg } = await NTcore.session.xxx
-
-// NTcore 并不是必须的，只是因为我没有 export session ....
-```
-
-# LiteLoader-NapCatCore-Template
+# LiteLoader-Wrapper-Template
 
 自用插件开发模板，会尽可能实现开发插件时所需要的基础功能，使开发者焦距核心功能
 
@@ -46,9 +31,7 @@ const { result, errMsg } = await NTcore.session.xxx
 
 ### Hook Wrapper
 
-可以先了解下 [NapCatCore](https://github.com/NapNeko/LiteLoader-NapCatCore)  
-该模板并不只是单纯的创建了 `NTCore` 实例，而是对 Wrapper 中的函数都进行了拦截用于做到更多事情  
-~~如果你不喜欢可以参考 [NapCatExample](https://github.com/NapNeko/LiteLoader-NapCatExample) 使用非侵入式的方式创建 NTCore，我不觉得会有很大区别就是了~~
+用于暴露QQ内部API，主要是向外暴露 `NodeIQQNTWrapperSession` 模块  
 
 ```ts
 interface hookWarpperConfigType {
@@ -65,12 +48,12 @@ interface hookWarpperConfigType {
 我默认屏蔽了 2 个事件，结合 log 我想你很快知道如何使用  
  ~~其实就是把函数的调用全拼接到一起~~
 
-另一个注意的点是 NapCatCore 中的大多数 API 都需要登陆后调用，所以 await 会去等待登录后才执行
+需要注意的点是 session 中的大多数 API 都需要登陆后调用，所以 await 会去等待登录后才执行
 
 ```ts
 ;(async () => {
   await hookWrapper()
-  // 一些乱七八糟的初始化，如果你有依赖 NTCore 的话
+  // 一些乱七八糟的初始化，如果你有依赖 session 的话
 })()
 ```
 
