@@ -12,71 +12,71 @@ interface WrapperApi<T = unknown> {
 }
 
 export interface Wrapper {
-  NodeIKernelECDHService: () => void
+  NodeIKernelECDHService: WrapperApi
   NodeIQQNTWrapperEngine: WrapperApi<NodeIQQNTWrapperEngine>
   NodeIKernelLoginService: WrapperApi<NodeIKernelLoginService>
   NodeIOPSafePwdEdit: WrapperApi<NodeIOPSafePwdEdit>
   NodeIQQNTWrapperSession: WrapperApi<NodeIQQNTWrapperSession>
-  NodeIQQEmailService: () => void
-  NodeIKernelBaseEmojiService: () => void
-  NodeIKernelEmojiService: () => void
-  NodeIShareToWechatService: () => void
-  NodeIKernelLockService: () => void
-  NodeIKernelGuildMsgService: () => void
-  NodeIKernelBdhUploadService: () => void
-  NodeIKernelAlbumService: () => void
-  NodeIKernelProfileLikeService: () => void
-  NodeIKernelNearbyProService: () => void
-  NodeIKernelLiteBusinessService: () => void
-  NodeIKernelGroupSchoolService: () => void
-  NodeIKernelGroupTabService: () => void
-  NodeIKernelRobotService: () => void
+  NodeIQQEmailService: WrapperApi
+  NodeIKernelBaseEmojiService: WrapperApi
+  NodeIKernelEmojiService: WrapperApi
+  NodeIShareToWechatService: WrapperApi
+  NodeIKernelLockService: WrapperApi
+  NodeIKernelGuildMsgService: WrapperApi
+  NodeIKernelBdhUploadService: WrapperApi
+  NodeIKernelAlbumService: WrapperApi
+  NodeIKernelProfileLikeService: WrapperApi
+  NodeIKernelNearbyProService: WrapperApi
+  NodeIKernelLiteBusinessService: WrapperApi
+  NodeIKernelGroupSchoolService: WrapperApi
+  NodeIKernelGroupTabService: WrapperApi
+  NodeIKernelRobotService: WrapperApi
   NodeIO3MiscService: WrapperApi<NodeIO3MiscService>
-  NodeIKernelOnlineStatusService: () => void
-  NodeIKernelTianShuService: () => void
-  NodeIKernelQQPlayService: () => void
-  NodeIKernelUnitedConfigService: () => void
-  NodeIKernelWiFiPhotoHostService: () => void
-  NodeIKernelWiFiPhotoGetAlbumListCallback: () => void
-  NodeIKernelWiFiPhotoGetAllPhotoSimpleInfoCallback: () => void
-  NodeIKernelWiFiPhotoGetPhotoInfoBatchCallback: () => void
-  NodeIKernelWiFiPhotoGetPhotoCallback: () => void
-  NodeIKernelWiFiPhotoDeletePhotoBatchCallback: () => void
-  NodeIKernelWiFiPhotoClientService: () => void
-  NodeIKernelUixConvertService: () => void
-  NodeIKernelDbToolsService: () => void
-  NodeIKernelTestPerformanceService: () => void
-  NodeIKernelSkinService: () => void
-  NodeIKernelTicketService: () => void
-  NodeIKernelCollectionService: () => void
-  NodeISpan: () => void
+  NodeIKernelOnlineStatusService: WrapperApi
+  NodeIKernelTianShuService: WrapperApi
+  NodeIKernelQQPlayService: WrapperApi
+  NodeIKernelUnitedConfigService: WrapperApi
+  NodeIKernelWiFiPhotoHostService: WrapperApi
+  NodeIKernelWiFiPhotoGetAlbumListCallback: WrapperApi
+  NodeIKernelWiFiPhotoGetAllPhotoSimpleInfoCallback: WrapperApi
+  NodeIKernelWiFiPhotoGetPhotoInfoBatchCallback: WrapperApi
+  NodeIKernelWiFiPhotoGetPhotoCallback: WrapperApi
+  NodeIKernelWiFiPhotoDeletePhotoBatchCallback: WrapperApi
+  NodeIKernelWiFiPhotoClientService: WrapperApi
+  NodeIKernelUixConvertService: WrapperApi
+  NodeIKernelDbToolsService: WrapperApi
+  NodeIKernelTestPerformanceService: WrapperApi
+  NodeIKernelSkinService: WrapperApi
+  NodeIKernelTicketService: WrapperApi
+  NodeIKernelCollectionService: WrapperApi
+  NodeISpan: WrapperApi
   NodeQQNTWrapperUtil: NodeQQNTWrapperUtil
-  NodeIQQNTWrapperNetwork: () => void
-  NodeIKernelGuildService: () => void
-  NodeIKernelTipOffService: () => void
-  NodeIKernelFileAssistantService: () => void
-  NodeIKernelQiDianService: () => void
-  NodeIKernelStorageCleanService: () => void
-  NodeIKernelSettingService: () => void
-  NodeIKernelYellowFaceForManagerService: () => void
-  NodeIKernelYellowFaceService: () => void
-  NodeIKernelNewFeedService: () => void
-  NodeIKernelFeedService: () => void
-  NodeIKernelRichMediaService: () => void
-  NodeIKernelAvatarService: () => void
-  NodeIKernelRDeliveryService: () => void
-  NodeIKernelDirectSessionService: () => void
-  NodeIKernelConfigMgrService: () => void
-  NodeIKernelRecentContactService: () => void
-  NodeIKernelProfileService: () => void
-  NodeIKernelMsgService: () => void
-  NodeIKernelGroupService: () => void
-  NodeIKernelSearchService: () => void
-  NodeIKernelBuddyService: () => void
-  NodeIKernelMSFService: () => void
-  NodeIKernelNodeMiscService: () => void
-  NodeIGuildHotUpdateService: () => void
-  NodeIKernelMsgBackupService: () => void
-  NodeIKernelRemotingService: () => void
-  NodeIKernelAVSDKService: () => void
+  NodeIQQNTWrapperNetwork: WrapperApi
+  NodeIKernelGuildService: WrapperApi
+  NodeIKernelTipOffService: WrapperApi
+  NodeIKernelFileAssistantService: WrapperApi
+  NodeIKernelQiDianService: WrapperApi
+  NodeIKernelStorageCleanService: WrapperApi
+  NodeIKernelSettingService: WrapperApi
+  NodeIKernelYellowFaceForManagerService: WrapperApi
+  NodeIKernelYellowFaceService: WrapperApi
+  NodeIKernelNewFeedService: WrapperApi
+  NodeIKernelFeedService: WrapperApi
+  NodeIKernelRichMediaService: WrapperApi
+  NodeIKernelAvatarService: WrapperApi
+  NodeIKernelRDeliveryService: WrapperApi
+  NodeIKernelDirectSessionService: WrapperApi
+  NodeIKernelConfigMgrService: WrapperApi
+  NodeIKernelRecentContactService: WrapperApi
+  NodeIKernelProfileService: WrapperApi
+  NodeIKernelMsgService: WrapperApi
+  NodeIKernelGroupService: WrapperApi
+  NodeIKernelSearchService: WrapperApi
+  NodeIKernelBuddyService: WrapperApi
+  NodeIKernelMSFService: WrapperApi
+  NodeIKernelNodeMiscService: WrapperApi
+  NodeIGuildHotUpdateService: WrapperApi
+  NodeIKernelMsgBackupService: WrapperApi
+  NodeIKernelRemotingService: WrapperApi
+  NodeIKernelAVSDKService: WrapperApi
 }
