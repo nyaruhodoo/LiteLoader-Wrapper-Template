@@ -2,7 +2,7 @@ import { hookWrapper } from '@/main/hook/hookWrapper'
 import { EventEnum } from './enum/eventEnum'
 ;(async () => {
   await hookWrapper({
-    log: false,
+    log: true,
     eventBlacklist: [EventEnum.sendLog, /tianshu/i],
     eventInterceptors: {}
   })

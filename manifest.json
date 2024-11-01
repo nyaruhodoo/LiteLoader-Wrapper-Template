@@ -2,8 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/adproqwq/LiteLoaderQQNT-Manifest-JsonSchema/main/manifest.schema.json",
   "manifest_version": 4,
   "type": "extension",
-  "name": "liteloader-napcatcore-template",
-  "slug": "liteloader-napcatcore-template",
+  "name": "liteloader-wrapper-template",
+  "slug": "liteloader-wrapper-template",
   "description": "LiteLoaderQQNT的插件模板",
   "version": "0.0.1",
   "authors": [

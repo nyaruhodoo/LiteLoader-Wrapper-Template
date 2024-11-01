@@ -1,5 +1,5 @@
 {
-  "name": "liteloader-napcatcore-template",
+  "name": "liteloader-wrapper-template",
   "version": "0.0.1",
   "description": "个人自用插件开发模板",
   "main": "./out/main/index.js",
