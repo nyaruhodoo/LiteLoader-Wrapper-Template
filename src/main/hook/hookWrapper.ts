@@ -1,14 +1,21 @@
-import type { NTWrapperNodeApi, NodeIQQNTWrapperSession } from 'napcat.core'
 import { EventEmitter } from 'node:events'
-import { NTCoreWrapper } from 'napcat.core'
 import Process from 'node:process'
 import { EventEnum } from '../enum/eventEnum'
 import { inspect } from 'node:util'
-import type { hookWarpperConfigType } from './type'
+import type { Wrapper } from './types/wrapper'
+import type { NodeIQQNTWrapperSession } from './types/wrapper/NodeIQQNTWrapperSession'
+
+interface hookWarpperConfigType {
+  // 是否打印日志
+  log?: boolean
+  // 需要忽略的黑名单事件
+  eventBlacklist?: (string | RegExp)[]
+  // 拦截事件，可以修改参数
+  eventInterceptors?: Record<string, (eventData: any) => any>
+}
 
 let NodeIQQNTWrapperSession: NodeIQQNTWrapperSession | undefined
-let NTWrapperNodeApi: NTWrapperNodeApi | undefined
-export let NTcore: NTCoreWrapper | undefined
+let Wrapper: Wrapper | undefined
 export const wrapperEmitter = new EventEmitter()
 
 /**
@@ -25,9 +32,9 @@ let hookConfig: hookWarpperConfigType | undefined
  * 打印函数调用相关参数
  */
 const logFn = ({ argArray, ret, key }: { argArray: any[]; ret: any; key: string }) => {
-  if ((key.endsWith('Service') && serviceMap.has(key)) || !hookConfig?.log) return
+  // if ((key.endsWith('Service') && serviceMap.has(key)) || !hookConfig?.log) return
   key.endsWith('Service') && serviceMap.set(key, true)
-  const depth: number | null = 2
+  const depth: number | null = null
 
   console.log('-----------------------------------------------')
   console.log(`${key} 被调用`)
@@ -129,9 +136,9 @@ const hookInstance = ({ instance, rootKey }: { instance: Record<string, any>; ro
 /**
  * hook wrapper
  */
-export const hookWrapper = (config?: hookWarpperConfigType): Promise<NTCoreWrapper> => {
+export const hookWrapper = (config?: hookWarpperConfigType) => {
   hookConfig = config
-  const { promise, resolve } = Promise.withResolvers<NTCoreWrapper>()
+  const { promise, resolve } = Promise.withResolvers()
 
   Process.dlopen = new Proxy(Process.dlopen, {
     apply(
@@ -141,7 +148,7 @@ export const hookWrapper = (config?: hookWarpperConfigType): Promise<NTCoreWrapp
         {
           id: number
           loaded: boolean
-          exports: Record<string, any>
+          exports: unknown
           paths: []
           children: []
         },
@@ -149,20 +156,20 @@ export const hookWrapper = (config?: hookWarpperConfigType): Promise<NTCoreWrapp
       ]
     ) {
       const [, fileName] = argArray
-      const nodeMod = Reflect.apply(target, thisArg, argArray)
+      const applyRet = Reflect.apply(target, thisArg, argArray)
 
       // hook 所有 wrapper 导出模块
       if (fileName.includes('wrapper.node')) {
-        // 这个类型已经过时了，但我也懒得改了...
-        const wrapper = argArray[0].exports as NTWrapperNodeApi
+        const wrapper = argArray[0].exports as Wrapper
         const hookWrapper = new Proxy(wrapper, {
-          get(_, wrapperApiName: string, receiver) {
-            const wrapperApi: unknown = Reflect.get(wrapper, wrapperApiName, receiver)
+          get(_, wrapperApiName: keyof Wrapper, receiver) {
+            const wrapperApi = Reflect.get(wrapper, wrapperApiName, receiver)
+            // 会有一个 __esModule 属性的读取
             if (typeof wrapperApi !== 'function') return wrapperApi
 
             return new Proxy(
               function () {
-                // 由于所有属性都被添加了 configurable ，必须更改父级来做到 proxy
+                // 由于所有属性都被添加了 configurable ，必须更改父级来实现 proxy
               },
               {
                 /**
@@ -219,16 +226,16 @@ export const hookWrapper = (config?: hookWarpperConfigType): Promise<NTCoreWrapp
             )
           }
         })
-        NTWrapperNodeApi = argArray[0].exports = hookWrapper
+        Wrapper = argArray[0].exports = hookWrapper
       }
 
-      return nodeMod
+      return applyRet
     }
   })
 
   // 等待登录
   wrapperEmitter.once(EventEnum.onQRCodeLoginSucceed, () => {
-    resolve((NTcore = new NTCoreWrapper(NTWrapperNodeApi!, NodeIQQNTWrapperSession!)))
+    resolve(undefined)
   })
 
   return promise

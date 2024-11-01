@@ -3,7 +3,7 @@ interface KerneIOPSafePwdEditEventCallbacks {
   onPwdCtrlKeyEvent(params: number): boolean
 }
 
-interface NodeIOPSafePwdEditInstance {
+export interface NodeIOPSafePwdEdit {
   // 添加和移除密码编辑监听器
   addOPSafePwdEditListener(listener: KernelOPSafePwdEditEventCallbacks): void // 根据实际事件类型替换 `any`
   removeOPSafePwdEditListener(listener: KernelOPSafePwdEditEventCallbacks): void // 根据实际事件类型替换 `any`
@@ -20,8 +20,4 @@ interface NodeIOPSafePwdEditInstance {
   ClearAllInput(): void // 清除所有输入
   UnLoadPwdSafeEdit(): void // 卸载密码安全编辑器
   IsSupportSafeEdit(): boolean // 检查是否支持安全编辑
-}
-
-export interface NodeIOPSafePwdEdit {
-  get: () => NodeIOPSafePwdEditInstance
 }

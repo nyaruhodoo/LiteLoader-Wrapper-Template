@@ -1,4 +1,4 @@
-interface NodeIQQNTWrapperEngineInstance {
+export interface NodeIQQNTWrapperEngine {
   onSendSSOReply(): void
   getECDHService(): any
   initWithDeskTopConfig(
@@ -38,8 +38,4 @@ interface NodeIQQNTWrapperEngineInstance {
   setLogLevel(level: number): void
   getDeviceInfo(): any
   initLog(): void
-}
-
-export interface NodeIQQNTWrapperEngine {
-  get(): NodeIQQNTWrapperEngineInstance
 }

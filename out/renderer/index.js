@@ -1,6 +1,6 @@
 const p = {
   test: !1
-}, d = "https://raw.githubusercontent.com/adproqwq/LiteLoaderQQNT-Manifest-JsonSchema/main/manifest.schema.json", g = 4, f = "extension", m = "liteloader-napcatcore-template", a = "liteloader-napcatcore-template", y = "LiteLoaderQQNT的插件模板", h = "0.0.1", w = [
+}, d = "https://raw.githubusercontent.com/adproqwq/LiteLoaderQQNT-Manifest-JsonSchema/main/manifest.schema.json", g = 4, f = "extension", m = "liteloader-wrapper-template", a = "liteloader-wrapper-template", y = "LiteLoaderQQNT的插件模板", h = "0.0.1", w = [
   {
     name: "Nyaruhodo",
     link: "https://github.com/nyaruhodoo"

@@ -5,12 +5,18 @@ import type { NodeIKernelLoginService } from './NodeIKernelLoginService'
 import type { NodeIOPSafePwdEdit } from './NodeIOPSafePwdEdit'
 import type { NodeIO3MiscService } from './NodeIO3MiscService'
 
+interface WrapperApi<T = unknown> {
+  new (...args: unknown[]): T
+  get?(): T
+  create?(): T
+}
+
 export interface Wrapper {
   NodeIKernelECDHService: () => void
-  NodeIQQNTWrapperEngine: NodeIQQNTWrapperEngine
-  NodeIKernelLoginService: NodeIKernelLoginService
-  NodeIOPSafePwdEdit: NodeIOPSafePwdEdit
-  NodeIQQNTWrapperSession: NodeIQQNTWrapperSession
+  NodeIQQNTWrapperEngine: WrapperApi<NodeIQQNTWrapperEngine>
+  NodeIKernelLoginService: WrapperApi<NodeIKernelLoginService>
+  NodeIOPSafePwdEdit: WrapperApi<NodeIOPSafePwdEdit>
+  NodeIQQNTWrapperSession: WrapperApi<NodeIQQNTWrapperSession>
   NodeIQQEmailService: () => void
   NodeIKernelBaseEmojiService: () => void
   NodeIKernelEmojiService: () => void
@@ -25,7 +31,7 @@ export interface Wrapper {
   NodeIKernelGroupSchoolService: () => void
   NodeIKernelGroupTabService: () => void
   NodeIKernelRobotService: () => void
-  NodeIO3MiscService: NodeIO3MiscService
+  NodeIO3MiscService: WrapperApi<NodeIO3MiscService>
   NodeIKernelOnlineStatusService: () => void
   NodeIKernelTianShuService: () => void
   NodeIKernelQQPlayService: () => void

@@ -14,8 +14,7 @@
     "check:build": "npm run typecheck && electron-vite build"
   },
   "dependencies": {
-    "@electron-toolkit/utils": "^3.0.0",
-    "napcat.core": "^1.0.3"
+    "@electron-toolkit/utils": "^3.0.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-ts": "^2.0.0",

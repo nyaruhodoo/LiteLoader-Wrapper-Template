@@ -7,7 +7,7 @@ import type { NodeIKernelProfileService } from './NodeIKernelProfileService'
 import type { NodeIKernelRobotService } from './NodeIKernelRobotService'
 import type { NodeIKernelSettingService } from './NodeIKernelSettingService'
 
-interface NodeIQQNTWrapperSessionInstance {
+export interface NodeIQQNTWrapperSession {
   // 各种服务获取方法
   getQQEmailService(): any
   getShareToWechatService(): any
@@ -88,8 +88,4 @@ interface NodeIQQNTWrapperSessionInstance {
   onUIConfigUpdate(): void // UI 配置更新
   getShortLinkBlacklist(): any // 获取短链接黑名单
   disableIpDirect(): void // 禁用 IP 直连
-}
-
-export interface NodeIQQNTWrapperSession {
-  create: () => NodeIQQNTWrapperSessionInstance
 }

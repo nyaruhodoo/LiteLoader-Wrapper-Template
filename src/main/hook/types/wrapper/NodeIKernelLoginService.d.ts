@@ -22,7 +22,7 @@ interface KernelLoginEventCallbacks {
   onUnitedConfigUpdate: () => void
 }
 
-interface NodeIKernelLoginServiceInstance {
+export interface NodeIKernelLoginService {
   // 添加和移除登录监听器
   addKernelLoginListener(listener: KernelLoginEventCallbacks): void // 根据实际事件类型替换 `any`
   removeKernelLoginListener(listener: KernelLoginEventCallbacks): void // 根据实际事件类型替换 `any`
@@ -72,8 +72,4 @@ interface NodeIKernelLoginServiceInstance {
   loginUnusualDevice(deviceInfo: any): Promise<void> // 登录异常设备
   loadNoLoginUnitedConfig(): void // 加载未登录的联合配置
   isHasLoginInfo(): boolean // 检查是否有登录信息
-}
-
-export interface NodeIKernelLoginService {
-  get: () => NodeIKernelLoginServiceInstance
 }
