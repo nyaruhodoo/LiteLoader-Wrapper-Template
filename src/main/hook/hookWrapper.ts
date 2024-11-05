@@ -6,13 +6,25 @@ import type { NodeIQQNTWrapperSession } from './types/wrapper/NodeIQQNTWrapperSe
 import { WrapperEnum } from '../enum/WrapperEnum'
 
 interface ConfigType {
-  // 是否打印日志
+  /**
+   * 是否开启log
+   */
   log?: boolean | RegExp
+  /**
+   * 调整 inspect 模式下的打印深度
+   */
   logDepth?: number
+  /**
+   * json 可以完整打印，inspect 格式更好看
+   */
   logType?: 'inspect' | 'json'
-  // 需要忽略的黑名单事件
+  /**
+   * 需要中断的黑名单事件
+   */
   eventBlacklist?: (WrapperPaths | RegExp)[]
-  // 拦截事件，可以修改参数
+  /**
+   * 事件拦截器，可以拦截请求参数以及返回值
+   */
   eventInterceptors?: WrapperInterceptors
 }
 
