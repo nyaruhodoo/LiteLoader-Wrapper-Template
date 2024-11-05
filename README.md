@@ -13,15 +13,7 @@
 比如屏蔽更新之类的小功能，一行就足够了  
 ~~如果没写出来不关我事啊，电报找一个叫il的，他亲口说的~~
 
-## 它具体可以做些什么？
-
-- 使用 `eventBlacklist` 禁止 QQ 执行某些逻辑
-- 使用 `eventInterceptors` 修改 QQ 调用内部函数时的参数以及返回值
-- 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，其实拦截器也可以做到只不过 emitter 更加易用
-- 使用 `NodeIQQNTWrapperSession` 直接调用 QQ 内部逻辑
-- 快速创建插件配置相关UI(有点精简)
-
-## 当然还有一些待办事项
+## 一些待办事项
 
 - [ ] 提供更完整的 wrapper 类型
 - [ ] 提供 listener 事件函数
@@ -30,6 +22,14 @@
 - [ ] 支持账号独立配置文件
 - [ ] 使用其他构建工具替换 Vite，目前所用的这一套还是太笨重了，在很多地方都存在不少问题
 - [ ] 集成插件自更新功能
+
+## 它具体可以做些什么？
+
+- 使用 `eventBlacklist` 禁止 QQ 执行某些逻辑
+- 使用 `eventInterceptors` 修改 QQ 调用内部函数时的参数以及返回值
+- 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
+- 使用 `NodeIQQNTWrapperSession` 直接调用 QQ 内部 API
+- 快速创建插件配置相关UI(有点精简)
 
 ~~仓库是早上建的，坑是晚上弃的~~  
 ~~其实待办事项是写给你们看的，等你们来添砖加瓦~~
@@ -90,6 +90,8 @@ starWand.Session?.getMsgService().sendMsg()
 
 本模板只会为这些函数提供一些类型支持，但不会进行额外封装  
 你所调用的 API 都是原汁原味的
+
+你可能注意到 hookWrapper 会返回一个 promise，这是因为大多数 API 都需要登陆后调用，所以 await 实际上是在等待登录
 
 ## 类型(很很很很重要)
 
