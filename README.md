@@ -1,135 +1,109 @@
 # 写在最前
 
-测试版本 **9.9.15-28971**
+测试版本 **9.9.15-29271**
 
-由于 26909 版本后 wrapper 有很大改动，导致该模板并不能同时支持之前版本  
-如果你一定要使用可以参考历史版本，具体哪个commit我自己也忘了
+由于 26909 版本后 wrapper 本体有很大改动，导致该模板并不能同时支持之前版本(懒得做)  
+如果你一定要用可以参考历史版本，具体哪个commit我也忘了
 
 # LiteLoader-Wrapper-Template
 
-自用插件开发模板，会尽可能实现开发插件时所需要的基础功能，使开发者焦距核心功能
+自用插件开发模板，与其他模板不同的是提供了一些 hook 功能(从头hook到脚，侵入式很强)  
+大概能避免初次接触QQ插件开发时无从下手到处去问？  
+借助该模板大部分初级插件均可在几十行代码左右实现，只需要你具备一些 JS 相关基础  
+比如屏蔽更新之类的小功能，一行就足够了  
+~~如果没写出来不关我事啊，电报找一个叫il的，他亲口说的~~
 
-当前提供的功能如下
+## 它具体可以做些什么？
 
-- 快速创建插件配置页面
-- 提供 Hook Wrapper / Hook IPC (侵入性那是相当强，从头 hook 到脚)
+- 使用 `eventBlacklist` 禁止 QQ 执行某些逻辑
+- 使用 `eventInterceptors` 修改 QQ 调用内部函数时的参数以及返回值
+- 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，其实拦截器也可以做到只不过 emitter 更加易用
+- 使用 `NodeIQQNTWrapperSession` 直接调用 QQ 内部逻辑
+- 快速创建插件配置相关UI(有点精简)
 
-## 待办事项
-- [ ] 提供 listener 事件函数 
+## 当然还有一些待办事项
+
+- [ ] 提供更完整的 wrapper 类型
+- [ ] 提供 listener 事件函数
 - [ ] 修复 watch 打包
-- [ ] 支持更多组件用于丰富配置选项
+- [ ] 支持更多组件用于丰富配置选项，或许会考虑直接引入 Vue
 - [ ] 支持账号独立配置文件
 - [ ] 使用其他构建工具替换 Vite，目前所用的这一套还是太笨重了，在很多地方都存在不少问题
 - [ ] 集成插件自更新功能
 
-~~仓库是早上建的，坑是晚上弃的~~
+~~仓库是早上建的，坑是晚上弃的~~  
+~~其实待办事项是写给你们看的，等你们来添砖加瓦~~
 
-## 使用教程？文档？胡言乱语？
+## 一个不怎么样的文档
 
-如果你比起看文档更喜欢看项目那么可以跳转 [StarWand](https://github.com/nyaruhodoo/LiteLoader-StarWand)  
-其中包含了 hook wrapper 的一些基本使用，主要是一些事件的参数修改以及中断
+如果你比起看文档更喜欢看代码那么可以跳转 [StarWand](https://github.com/nyaruhodoo/LiteLoader-StarWand) 其中包含了一些基本使用
 
-### Hook Wrapper
+首选我要说明一件事 `StarWand` 插件和下面的 `StarWand` 没有什么关系！  
+仅仅是我个人很喜欢这个名字所以复用了而已
 
-用于暴露QQ内部API，主要是向外暴露 `NodeIQQNTWrapperSession` 模块  
+### StarWand
+
+当在主线程执行 `hookWrapper` 后会返回一个 `starWand` 实例  
+它本身并没有什么复杂的，仅仅是存放了一些变量便于引用
 
 ```ts
-interface hookWarpperConfigType {
+class StarWand {
+  wrapperEmitter = new EventEmitter<WrapperEventMap>()
+  constructor(
+    public Wrapper?: Wrapper,
+    public Session?: NodeIQQNTWrapperSession,
+    public config: ConfigType = {}
+  ) {}
+}
+```
+
+我们需要关注的是 `config` ，这里直接给出类型定义
+
+```ts
+interface ConfigType {
   // 是否打印日志
-  log?: boolean
+  log?: boolean | RegExp
+  logDepth?: number
+  logType?: 'inspect' | 'json'
   // 需要忽略的黑名单事件
-  eventBlacklist?: string[]
+  eventBlacklist?: (WrapperPaths | RegExp)[]
   // 拦截事件，可以修改参数
-  eventInterceptors?: Record<string, (eventData: any) => any>
+  eventInterceptors?: WrapperInterceptors
 }
 ```
 
-当你使用 `wrapperEmitter` 或 `eventInterceptors` 时，需要确认好事件名  
-我默认屏蔽了 2 个事件，结合 log 我想你很快知道如何使用  
- ~~其实就是把函数的调用全拼接到一起~~
+或许你会觉得我什么都没说，但请放心，我已经添加了相关类型定义 TS 会指引你前进
 
-需要注意的点是 session 中的大多数 API 都需要登陆后调用，所以 await 会去等待登录后才执行
+### Wrapper 是什么
 
-```ts
-;(async () => {
-  await hookWrapper()
-  // 一些乱七八糟的初始化，如果你有依赖 session 的话
-})()
-```
+我已经在[新手文档](https://github.com/nyaruhodoo/LiteLoader-BeginnerTutorial?tab=readme-ov-file#%E5%9C%A8-wrapper-%E5%81%9A%E7%82%B9%E4%BB%80%E4%B9%88)中进行了一些说明，如无特别需求一般情况下是不需要直接访问该属性的
 
-### Hook IPC
+### Session 是什么
 
-提供的参数和 wrapper 类似，都可以做到对某个事件的中断以及参数修改
+其中保存了 QQ 内部封装好的一系列 API，所有需要与服务端交互的逻辑都是通过它实现的
 
 ```ts
-// 参数
-interface hookIPCConfigType {
-  log?: 'all' | 'send' | 'message'
-  eventBlacklist?: string[]
-  eventInterceptors?: Record<string, (args: any) => any>
-}
+// 实际使用起来就是这个样子
+const starWand = await hookWrapper()
+starWand.Session?.getMsgService().sendMsg()
 ```
 
-`eventInterceptors` 和 `ipcEmitter` 中的事件名你同样可以通过开启 `log` 来查看  
-`cmdName` 和 `eventName` 均可  
-需要注意的是当你拦截 `response` 时事件名需要写 `${eventName}:response`
+本模板只会为这些函数提供一些类型支持，但不会进行额外封装  
+你所调用的 API 都是原汁原味的
 
-关于 IPC 多写点好了，本来这些内容应该放到新手教程那边，但我实在是不想维护不同项目了  
-众所周知 IPC 是可以双向通信的，也就是主线程和渲染线程的通信，再举个栗子
+## 类型(很很很很重要)
 
-```ts
-// 此处为渲染线程向主线程 emit 的消息
-;[
-  { frameId: 1, processId: 5 },
-  false,
-  // 这里的2，代表的是qq主窗口，每个窗口都具备自己的标识ID
-  'IPC_UP_2',
-  [
-    {
-      // request 代表请求主线程去做某件事
-      type: 'request',
-      // 该id用于主线程向渲染线程发送消息时进行订阅调用结果
-      callbackId: '57ee753d-e390-46d0-b785-abff293786d4',
-      // 该参数搭配下面的 checkHasMultipleQQ 会形成一个函数的调用
-      eventName: 'ns-BusinessApi-2'
-    },
-    ['checkHasMultipleQQ']
-  ]
-]
-```
+- 增加了 `Wrapper` 类型便于开发者调用相关 API (类型必然有误)
+- 全局注入了 `global.d.ts` 暴露 `LiteLoader` 相关API (类型可能有误)
+- 增加了 `contextBridge.d.ts` 用于在 `preload` 与 `renderer` 之间暴露接口时同步类型
 
-```ts
-// 此处为主线程向渲染线程 send 的消息
-;[
-  'IPC_DOWN_2',
-  {
-    callbackId: '57ee753d-e390-46d0-b785-abff293786d4',
-    promiseStatue: 'full',
-    type: 'response',
-    eventName: 'ns-BusinessApi-2'
-  },
-  // 只需关注这里即可，代表的是返回值
-  true
-]
-// 主线程除了会发送 response 也会发送 request 类型事件
-;[
-  ('IPC_DOWN_2',
-  { type: 'request', eventName: 'ns-ntApi-2' },
-  [
-    {
-      // 收到新消息时情况则会反过来，是主线程请求渲染线程去做某些事，会派发一个 cmd 事件
-      cmdName: 'nodeIKernelGroupListener/onGroupNotifiesUnreadCountUpdated',
-      cmdType: 'event',
-      // 携带参数
-      payload: []
-    }
-  ])
-]
-```
+**StarWand 中所有类型，都是基于 Wrapper 类型用体操动态生成的**  
+**Wrapper 类型本身又是通过 ChatGPT 自动生成额外加上人工修正**  
+基于以上两点，你不要盲目依赖类型，在调用相关函数时务必要先通过 `log` 提前确认好参数是否有误，然后再进行调用  
+或许你会觉得很鸡肋，但很抱歉本项目处于一个十分初级的阶段，我个人也并无太多精力去收集所有类型  
+如果你在开发时遇到了不如意的类型问题也请不要直接忽略或者进行断言，请直接进行 PR 这样本项目才会越来越好
 
-具体的细节就不再过多描述，你可以直接去阅读代码
-
-`Hook IPC` 与 `Hook Wrapper` 可以共存，但因提供的功能比较类似还是只推荐使用其一，如果有什么新想法我也只会在 wrapper 那边进行实现
+## 使用时的一些杂项内容
 
 ### 修改 manifest & defaultConfig & createConfigViewConfig
 
@@ -185,18 +159,13 @@ static mergeConfig(oldConfig: Record<string, any>, newConfig: ConfigType) {
   }
 ```
 
-## 构建相关
+### 构建相关
 
 因基于 electron-vite 进行构建，所以功能大差不差，只是做了略微修改  
 main、preload、renderer 3个文件都是独立打包不会存在共同引用，但不妨碍你在开发时引用共同的代码，在打包后会分别复制到3个文件中
 
 **node_modules 中的文件也会跟随打包，目的是为了它人使用插件时不需要在安装依赖**  
 **唯一的注意事项是不要在渲染层引用 node 环境下的依赖**
-
-### 类型
-
-- 全局注入了 `global.d.ts` 暴露 `LiteLoader` 相关API (类型可能有误)
-- 增加了 `contextBridge.d.ts` 用于在 `preload` 与 `renderer` 之间暴露接口时同步类型
 
 ### 路径
 

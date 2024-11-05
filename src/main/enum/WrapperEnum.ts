@@ -3,8 +3,6 @@
  * 如果你不想在代码里写一大串莫名其妙的字符串那么还是建议统一维护，并且给出一些注释方便其他开发者
  */
 export const enum WrapperEnum {
-  //----------------- * Wrapper 部分 * -----------------
-
   // QQ的日志
   sendLog = 'NodeIQQNTWrapperSession/create/getNodeMiscService/sendLog',
 
