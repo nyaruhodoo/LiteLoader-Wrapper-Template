@@ -6,25 +6,35 @@ import type { NodeIKernelUnitedConfigService } from './NodeIKernelUnitedConfigSe
 import type { NodeIKernelProfileService } from './NodeIKernelProfileService'
 import type { NodeIKernelRobotService } from './NodeIKernelRobotService'
 import type { NodeIKernelSettingService } from './NodeIKernelSettingService'
+import type { NodeIKernelAVSDKService } from './NodeIKernelAVSDKService'
+import type { NodeIKernelConfigMgrService } from './NodeIKernelConfigMgrService'
+import type { NodeIQQEmailService } from './NodeIQQEmailService'
+import type { NodeIKernelBuddyService } from './NodeIKernelBuddyService'
+import type { NodeIKernelTipOffService } from './NodeIKernelTipOffService'
+import type { NodeIKernelSkinService } from './NodeIKernelSkinService'
+import type { NodeIKernelBaseEmojiService } from './NodeIKernelBaseEmojiService'
+import type { NodeIKernelSearchService } from './NodeIKernelSearchService'
+import type { NodeIKernelProfileLikeService } from './NodeIKernelProfileLikeService'
+import type { NodeIKernelGroupService } from './NodeIKernelGroupService'
 
 export interface NodeIQQNTWrapperSession {
   // 各种服务获取方法
-  getQQEmailService(): any
+  getQQEmailService(): NodeIQQEmailService
   getShareToWechatService(): any
   getAlbumService(): any
   getTianShuService(): any
   getUnitedConfigService(): NodeIKernelUnitedConfigService
   getTicketService(): any
-  getTipOffService(): any
+  getTipOffService(): NodeIKernelTipOffService
   getProfileService(): NodeIKernelProfileService
-  getProfileLikeService(): any
-  getBuddyService(): any
-  getSearchService(): any
-  getGroupService(): any
+  getProfileLikeService(): NodeIKernelProfileLikeService
+  getBuddyService(): NodeIKernelBuddyService
+  getSearchService(): NodeIKernelSearchService
+  getGroupService(): NodeIKernelGroupService
   getMsgService(): NodeIKernelMsgService
   getRichMediaService(): any
   getRecentContactService(): any
-  getConfigMgrService(): any
+  getConfigMgrService(): NodeIKernelConfigMgrService
   getDirectSessionService(): any
   getRDeliveryService(): any
   getAvatarService(): NodeIKernelAvatarService
@@ -37,7 +47,7 @@ export interface NodeIQQNTWrapperSession {
   getQiDianService(): any
   getFileAssistantService(): any
   getGuildService(): any
-  getSkinService(): any
+  getSkinService(): NodeIKernelSkinService
   getTestPerformanceService(): any
   getQQPlayService(): any
   getDbToolsService(): any
@@ -53,12 +63,12 @@ export interface NodeIQQNTWrapperSession {
   getGuildMsgService(): any
   getLockService(): any
   getEmojiService(): any
-  getBaseEmojiService(): any
+  getBaseEmojiService(): NodeIKernelBaseEmojiService
   getMSFService(): NodeIKernelMSFService
   getNodeMiscService(): NodeIKernelNodeMiscService
   getGuildHotUpdateService(): any
   getMsgBackupService(): any
-  getAVSDKService(): any
+  getAVSDKService(): NodeIKernelAVSDKService
 
   // 会话管理方法
   init(): void // 初始化

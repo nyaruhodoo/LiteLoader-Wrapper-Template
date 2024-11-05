@@ -1,4 +1,8 @@
-export const enum EventEnum {
+/**
+ * 其实这个 enum 并不是必须的，目前已经做了 wrapper 类型动态解析，不再需要手动拼接
+ * 如果你不想在代码里写一大串莫名其妙的字符串那么还是建议统一维护，并且给出一些注释方便其他开发者
+ */
+export const enum WrapperEnum {
   //----------------- * Wrapper 部分 * -----------------
 
   // QQ的日志
@@ -13,14 +17,6 @@ export const enum EventEnum {
   // 发送消息
   sendMsg = 'NodeIQQNTWrapperSession/create/getMsgService/sendMsg',
 
-  // 广告?
-  requestTianshuAdv = 'NodeIQQNTWrapperSession/create/getMsgService/requestTianshuAdv',
-
   // 更新
-  fetchUnitedCommendConfig = 'NodeIQQNTWrapperSession/create/getUnitedConfigService/fetchUnitedCommendConfig',
-
-  //----------------- * IPC 部分 * -----------------
-
-  // 收到新消息(只会收到已激活窗口消息)
-  onRecvActiveMsg = 'nodeIKernelMsgListener/onRecvActiveMsg'
+  fetchUnitedCommendConfig = 'NodeIQQNTWrapperSession/create/getUnitedConfigService/fetchUnitedCommendConfig'
 }

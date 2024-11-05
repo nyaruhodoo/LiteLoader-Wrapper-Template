@@ -1,144 +1,150 @@
 import { EventEmitter } from 'node:events'
 import Process from 'node:process'
-import { EventEnum } from '../enum/eventEnum'
 import { inspect } from 'node:util'
-import type { Wrapper } from './types/wrapper'
+import type { Wrapper, WrapperPaths, WrapperEventMap, WrapperInterceptors } from './types/wrapper'
 import type { NodeIQQNTWrapperSession } from './types/wrapper/NodeIQQNTWrapperSession'
+import { WrapperEnum } from '../enum/WrapperEnum'
 
-interface hookWarpperConfigType {
+interface ConfigType {
   // 是否打印日志
-  log?: boolean
+  log?: boolean | RegExp
+  logDepth?: number
+  logType?: 'inspect' | 'json'
   // 需要忽略的黑名单事件
-  eventBlacklist?: (string | RegExp)[]
+  eventBlacklist?: (WrapperPaths | RegExp)[]
   // 拦截事件，可以修改参数
-  eventInterceptors?: Record<string, (eventData: any) => any>
+  eventInterceptors?: WrapperInterceptors
 }
 
-let NodeIQQNTWrapperSession: NodeIQQNTWrapperSession | undefined
-let Wrapper: Wrapper | undefined
-export const wrapperEmitter = new EventEmitter()
+// 抱歉，没什么很特别的原因就是很中意这个名字
+class StarWand {
+  wrapperEmitter = new EventEmitter<WrapperEventMap>()
+  constructor(
+    public Wrapper?: Wrapper,
+    public Session?: NodeIQQNTWrapperSession,
+    public config: ConfigType = {}
+  ) {}
 
-/**
- * 用于避免多次调用 getService 造成的打印
- */
-const serviceMap = new Map<string, boolean>()
+  /**
+   * 用于打印函数调用结果(感觉有点low)
+   */
+  logFn({ argArray, applyRet, key }: { argArray: unknown[]; applyRet: unknown; key: string }) {
+    if (!this.config.log) return
+    if (typeof this.config.log !== 'boolean' && !this.config.log.test(key)) return
 
-/**
- * 配置对象
- */
-let hookConfig: hookWarpperConfigType | undefined
+    const depth = this.config.logDepth ?? 2
 
-/**
- * 打印函数调用相关参数
- */
-const logFn = ({ argArray, ret, key }: { argArray: any[]; ret: any; key: string }) => {
-  // if ((key.endsWith('Service') && serviceMap.has(key)) || !hookConfig?.log) return
-  key.endsWith('Service') && serviceMap.set(key, true)
-  const depth: number | null = null
-
-  console.log('-----------------------------------------------')
-  console.log(`${key} 被调用`)
-  argArray.length && console.log(`参数: `, inspect(argArray, { depth, colors: true }))
-
-  if (ret instanceof Promise) {
-    console.log('返回值为 Promise，请观察后续打印内容')
-    ret.then(
-      (res) => {
-        console.log(`${key} 返回值: `)
-        console.log(inspect(res, { depth, colors: true }))
+    const logUtils = {
+      inspect(params: unknown) {
+        return inspect(params, { depth, colors: true })
       },
-      (err) => {
-        console.log(`${key} 返回值: `)
-        console.log(inspect(err, { depth, colors: true }))
+      json(params: unknown) {
+        return JSON.stringify(params, null, 2)
       }
-    )
-  } else {
-    console.log(`返回值: `, inspect(ret, { depth, colors: true }))
-
-    if (typeof ret === 'object' && ret) {
-      const retPropertyNames = Object.getOwnPropertyNames(ret)
-      retPropertyNames.length && console.log(`返回值 keys: `, inspect(retPropertyNames, { depth, colors: true }))
-
-      console.log(
-        `原型 keys: `,
-        inspect(Object.getOwnPropertyNames(Object.getPrototypeOf(ret)), { depth, colors: true })
-      )
     }
+
+    const log = logUtils[this.config.logType ?? 'inspect']
+
+    console.log('-----------------------------------------------')
+    console.log(`${key} 被调用`)
+    argArray.length && console.log(`参数: `, log(argArray))
+
+    if (applyRet instanceof Promise) {
+      console.log('返回值为 Promise，请观察后续打印内容')
+      applyRet.then(
+        (res) => {
+          console.log(`${key} 返回值: `)
+          console.log(log(res))
+        },
+        (err) => {
+          console.log(`${key} 返回值: `)
+          console.log(log(err))
+        }
+      )
+    } else {
+      console.log(`返回值: `, log(applyRet))
+
+      if (typeof applyRet === 'object' && applyRet) {
+        const retPropertyNames = Object.getOwnPropertyNames(applyRet)
+        retPropertyNames.length && console.log(`返回值 keys: `, log(retPropertyNames))
+
+        console.log(`原型 keys: `, log(Object.getOwnPropertyNames(Object.getPrototypeOf(applyRet))))
+      }
+    }
+  }
+
+  /**
+   * Hook Wrapper 中的实例对象
+   */
+  hookInstance({ instance, rootKey }: { instance: Record<string, any>; rootKey: string }) {
+    return new Proxy(instance, {
+      get: (_, p: string, receiver) => {
+        const targetProperty = Reflect.get(instance, p, receiver)
+        if (typeof targetProperty !== 'function') return targetProperty
+
+        // 先生真乃盖世神医
+        // return Reflect.get(target, p, receiver).bind(instance)
+
+        const key = `${rootKey}/${p}`
+
+        return (...args) => {
+          // 拦截黑名单事件
+          const isReturn = this.config.eventBlacklist?.some((value) => {
+            if (typeof value === 'string') {
+              return key === value
+            } else {
+              return value.test(key)
+            }
+          })
+          if (isReturn) return
+
+          // 对于监听器参数也进行hook
+          if (key.endsWith('Listener')) {
+            args[0] = this.hookInstance({
+              instance: args[0],
+              rootKey: key
+            })
+          }
+
+          // hook args
+          args = this.config.eventInterceptors?.[key]?.(args) ?? args
+
+          let applyRet = instance[p](...args)
+
+          // hook applyRet
+          applyRet = this.config.eventInterceptors?.[`${key}:response`]?.({ applyRet, params: args }) ?? applyRet
+
+          // Service 需额外处理
+          if (key.endsWith('Service')) {
+            applyRet = this.hookInstance({
+              instance: applyRet as Record<string, unknown>,
+              rootKey: key
+            })
+          }
+
+          // 额外派发事件方便监听处理
+          // @ts-expect-error  - 不要管它
+          this.wrapperEmitter.emit(key, {
+            applyRet,
+            params: args
+          })
+
+          this.logFn({
+            argArray: args,
+            applyRet: applyRet,
+            key: key
+          })
+
+          return applyRet
+        }
+      }
+    })
   }
 }
 
-/**
- * hook 实例的原型方法
- */
-const hookInstance = ({ instance, rootKey }: { instance: Record<string, any>; rootKey: string }) => {
-  return new Proxy(instance, {
-    get(_, p: string, receiver) {
-      const targetProperty = Reflect.get(instance, p, receiver)
-      if (typeof targetProperty !== 'function') return targetProperty
-
-      // 先生真乃盖世神医
-      // return Reflect.get(target, p, receiver).bind(instance)
-
-      const key = `${rootKey}/${p}`
-
-      return (...args) => {
-        // 拦截黑名单事件
-        const isReturn = hookConfig?.eventBlacklist?.some((value) => {
-          if (typeof value === 'string') {
-            return key === value
-          } else {
-            return value.test(key)
-          }
-        })
-        if (isReturn) return
-
-        // 对于监听器参数也进行hook
-        if (key.endsWith('Listener')) {
-          args[0] = hookInstance({
-            instance: args[0],
-            rootKey: key
-          })
-        }
-
-        // hook args
-        args = hookConfig?.eventInterceptors?.[key]?.(args) ?? args
-
-        let applyRet = instance[p](...args)
-
-        // hook applyRet
-        applyRet = hookConfig?.eventInterceptors?.[`${key}:response`]?.(applyRet) ?? applyRet
-
-        // Service 需要额外处理一次
-        if (key.endsWith('Service')) {
-          applyRet = hookInstance({
-            instance: applyRet,
-            rootKey: key
-          })
-        }
-
-        // 额外派发事件方便监听处理
-        wrapperEmitter.emit(key, {
-          applyRet,
-          args
-        })
-
-        logFn({
-          argArray: args,
-          ret: applyRet,
-          key: key
-        })
-        return applyRet
-      }
-    }
-  })
-}
-
-/**
- * hook wrapper
- */
-export const hookWrapper = (config?: hookWarpperConfigType) => {
-  hookConfig = config
-  const { promise, resolve } = Promise.withResolvers()
+export const hookWrapper = (config?: ConfigType) => {
+  const { promise, resolve } = Promise.withResolvers<StarWand>()
+  starWand = new StarWand(undefined, undefined, config)
 
   Process.dlopen = new Proxy(Process.dlopen, {
     apply(
@@ -182,24 +188,24 @@ export const hookWrapper = (config?: hookWarpperConfigType) => {
 
                   return new Proxy(targetProperty, {
                     apply(target, thisArg, argArray) {
-                      const applyRet = Reflect.apply(target, thisArg, argArray)
                       const key = `${wrapperApiName}/${p}`
+                      const applyRet = Reflect.apply(target, thisArg, argArray)
 
-                      logFn({
+                      starWand?.logFn({
                         argArray,
-                        ret: applyRet,
+                        applyRet,
                         key
                       })
 
                       if (typeof applyRet !== 'object') return applyRet
 
-                      const hookApplyRet = hookInstance({
+                      const hookApplyRet = starWand?.hookInstance({
                         instance: applyRet,
                         rootKey: key
                       })
 
                       if (key === 'NodeIQQNTWrapperSession/create') {
-                        NodeIQQNTWrapperSession = hookApplyRet as NodeIQQNTWrapperSession
+                        starWand!.Session = hookApplyRet as NodeIQQNTWrapperSession
                       }
 
                       return hookApplyRet
@@ -207,17 +213,17 @@ export const hookWrapper = (config?: hookWarpperConfigType) => {
                   })
                 },
 
-                // 拦截构造器已无任何意义，观察下来只有 NodeQQNTWrapperUtil 但也没什么实际意义，但我也懒得删了
+                // 拦截构造器已无任何意义，观察下来只有 NodeQQNTWrapperUtil 但无任何实例属性，只有静态的
                 construct(_, argArray, newTarget) {
                   const instance = Reflect.construct(wrapperApi, argArray, newTarget)
 
-                  logFn({
+                  starWand?.logFn({
                     key: wrapperApiName,
-                    ret: instance,
+                    applyRet: instance,
                     argArray
                   })
 
-                  return hookInstance({
+                  return starWand!.hookInstance({
                     instance: instance,
                     rootKey: wrapperApiName
                   })
@@ -226,7 +232,7 @@ export const hookWrapper = (config?: hookWarpperConfigType) => {
             )
           }
         })
-        Wrapper = argArray[0].exports = hookWrapper
+        starWand!.Wrapper = argArray[0].exports = hookWrapper
       }
 
       return applyRet
@@ -234,9 +240,11 @@ export const hookWrapper = (config?: hookWarpperConfigType) => {
   })
 
   // 等待登录
-  wrapperEmitter.once(EventEnum.onQRCodeLoginSucceed, () => {
-    resolve(undefined)
+  starWand.wrapperEmitter.once(WrapperEnum.onQRCodeLoginSucceed, () => {
+    resolve(starWand!)
   })
 
   return promise
 }
+
+export let starWand: StarWand | undefined

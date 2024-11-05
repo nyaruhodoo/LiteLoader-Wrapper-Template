@@ -1,3 +1,25 @@
+interface KernelRobotListener {
+  /**
+   * 当机器人好友列表发生变化时触发
+   */
+  onRobotFriendListChanged: () => void
+
+  /**
+   * 当机器人列表发生变化时触发
+   */
+  onRobotListChanged: () => void
+
+  /**
+   * 当机器人标签列表发生变化时触发
+   */
+  onRobotTabListChanged: () => void
+
+  /**
+   * 当机器人资料发生变化时触发
+   */
+  onRobotProfileChanged: () => void
+}
+
 export interface NodeIKernelRobotService {
   /** 获取共享信息 */
   fetchShareInfo(robotId: string): Promise<any>
@@ -162,10 +184,10 @@ export interface NodeIKernelRobotService {
   fetchShareArkInfo(robotId: string): Promise<any>
 
   /** 添加内核机器人监听器 */
-  addKernelRobotListener(listener: unknown): void
+  addKernelRobotListener(listener: KernelRobotListener): void
 
   /** 移除内核机器人监听器 */
-  removeKernelRobotListener(listener: unknown): void
+  removeKernelRobotListener(listener: KernelRobotListener): void
 
   /** 获取缓存中的所有机器人好友 */
   getAllRobotFriendsFromCache(): Promise<any[]>

@@ -4,79 +4,110 @@ import type { NodeIQQNTWrapperSession } from './NodeIQQNTWrapperSession'
 import type { NodeIKernelLoginService } from './NodeIKernelLoginService'
 import type { NodeIOPSafePwdEdit } from './NodeIOPSafePwdEdit'
 import type { NodeIO3MiscService } from './NodeIO3MiscService'
+import type { DeepPath, ResolvePath } from '../utils'
 
-interface WrapperApi<T = unknown> {
+/**
+ * 只有 NodeIQQNTWrapperSession 是调用的 create 其他均是 get
+ */
+type WrapperApiWithMethods<T = unknown, IncludeMethods extends ('get' | 'create')[] = ['get']> = {
   new (...args: unknown[]): T
-  get?(): T
-  create?(): T
+} & {
+  [K in IncludeMethods[number]]?: () => T
 }
 
 export interface Wrapper {
-  NodeIKernelECDHService: WrapperApi
-  NodeIQQNTWrapperEngine: WrapperApi<NodeIQQNTWrapperEngine>
-  NodeIKernelLoginService: WrapperApi<NodeIKernelLoginService>
-  NodeIOPSafePwdEdit: WrapperApi<NodeIOPSafePwdEdit>
-  NodeIQQNTWrapperSession: WrapperApi<NodeIQQNTWrapperSession>
-  NodeIQQEmailService: WrapperApi
-  NodeIKernelBaseEmojiService: WrapperApi
-  NodeIKernelEmojiService: WrapperApi
-  NodeIShareToWechatService: WrapperApi
-  NodeIKernelLockService: WrapperApi
-  NodeIKernelGuildMsgService: WrapperApi
-  NodeIKernelBdhUploadService: WrapperApi
-  NodeIKernelAlbumService: WrapperApi
-  NodeIKernelProfileLikeService: WrapperApi
-  NodeIKernelNearbyProService: WrapperApi
-  NodeIKernelLiteBusinessService: WrapperApi
-  NodeIKernelGroupSchoolService: WrapperApi
-  NodeIKernelGroupTabService: WrapperApi
-  NodeIKernelRobotService: WrapperApi
-  NodeIO3MiscService: WrapperApi<NodeIO3MiscService>
-  NodeIKernelOnlineStatusService: WrapperApi
-  NodeIKernelTianShuService: WrapperApi
-  NodeIKernelQQPlayService: WrapperApi
-  NodeIKernelUnitedConfigService: WrapperApi
-  NodeIKernelWiFiPhotoHostService: WrapperApi
-  NodeIKernelWiFiPhotoGetAlbumListCallback: WrapperApi
-  NodeIKernelWiFiPhotoGetAllPhotoSimpleInfoCallback: WrapperApi
-  NodeIKernelWiFiPhotoGetPhotoInfoBatchCallback: WrapperApi
-  NodeIKernelWiFiPhotoGetPhotoCallback: WrapperApi
-  NodeIKernelWiFiPhotoDeletePhotoBatchCallback: WrapperApi
-  NodeIKernelWiFiPhotoClientService: WrapperApi
-  NodeIKernelUixConvertService: WrapperApi
-  NodeIKernelDbToolsService: WrapperApi
-  NodeIKernelTestPerformanceService: WrapperApi
-  NodeIKernelSkinService: WrapperApi
-  NodeIKernelTicketService: WrapperApi
-  NodeIKernelCollectionService: WrapperApi
-  NodeISpan: WrapperApi
+  NodeIKernelECDHService: WrapperApiWithMethods
+  NodeIQQNTWrapperEngine: WrapperApiWithMethods<NodeIQQNTWrapperEngine>
+  NodeIKernelLoginService: WrapperApiWithMethods<NodeIKernelLoginService>
+  NodeIOPSafePwdEdit: WrapperApiWithMethods<NodeIOPSafePwdEdit>
+  NodeIQQNTWrapperSession: WrapperApiWithMethods<NodeIQQNTWrapperSession, ['create']>
+  NodeIQQEmailService: WrapperApiWithMethods
+  NodeIKernelBaseEmojiService: WrapperApiWithMethods
+  NodeIKernelEmojiService: WrapperApiWithMethods
+  NodeIShareToWechatService: WrapperApiWithMethods
+  NodeIKernelLockService: WrapperApiWithMethods
+  NodeIKernelGuildMsgService: WrapperApiWithMethods
+  NodeIKernelBdhUploadService: WrapperApiWithMethods
+  NodeIKernelAlbumService: WrapperApiWithMethods
+  NodeIKernelProfileLikeService: WrapperApiWithMethods
+  NodeIKernelNearbyProService: WrapperApiWithMethods
+  NodeIKernelLiteBusinessService: WrapperApiWithMethods
+  NodeIKernelGroupSchoolService: WrapperApiWithMethods
+  NodeIKernelGroupTabService: WrapperApiWithMethods
+  NodeIKernelRobotService: WrapperApiWithMethods
+  NodeIO3MiscService: WrapperApiWithMethods<NodeIO3MiscService>
+  NodeIKernelOnlineStatusService: WrapperApiWithMethods
+  NodeIKernelTianShuService: WrapperApiWithMethods
+  NodeIKernelQQPlayService: WrapperApiWithMethods
+  NodeIKernelUnitedConfigService: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoHostService: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoGetAlbumListCallback: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoGetAllPhotoSimpleInfoCallback: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoGetPhotoInfoBatchCallback: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoGetPhotoCallback: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoDeletePhotoBatchCallback: WrapperApiWithMethods
+  NodeIKernelWiFiPhotoClientService: WrapperApiWithMethods
+  NodeIKernelUixConvertService: WrapperApiWithMethods
+  NodeIKernelDbToolsService: WrapperApiWithMethods
+  NodeIKernelTestPerformanceService: WrapperApiWithMethods
+  NodeIKernelSkinService: WrapperApiWithMethods
+  NodeIKernelTicketService: WrapperApiWithMethods
+  NodeIKernelCollectionService: WrapperApiWithMethods
+  NodeISpan: WrapperApiWithMethods
   NodeQQNTWrapperUtil: NodeQQNTWrapperUtil
-  NodeIQQNTWrapperNetwork: WrapperApi
-  NodeIKernelGuildService: WrapperApi
-  NodeIKernelTipOffService: WrapperApi
-  NodeIKernelFileAssistantService: WrapperApi
-  NodeIKernelQiDianService: WrapperApi
-  NodeIKernelStorageCleanService: WrapperApi
-  NodeIKernelSettingService: WrapperApi
-  NodeIKernelYellowFaceForManagerService: WrapperApi
-  NodeIKernelYellowFaceService: WrapperApi
-  NodeIKernelNewFeedService: WrapperApi
-  NodeIKernelFeedService: WrapperApi
-  NodeIKernelRichMediaService: WrapperApi
-  NodeIKernelAvatarService: WrapperApi
-  NodeIKernelRDeliveryService: WrapperApi
-  NodeIKernelDirectSessionService: WrapperApi
-  NodeIKernelConfigMgrService: WrapperApi
-  NodeIKernelRecentContactService: WrapperApi
-  NodeIKernelProfileService: WrapperApi
-  NodeIKernelMsgService: WrapperApi
-  NodeIKernelGroupService: WrapperApi
-  NodeIKernelSearchService: WrapperApi
-  NodeIKernelBuddyService: WrapperApi
-  NodeIKernelMSFService: WrapperApi
-  NodeIKernelNodeMiscService: WrapperApi
-  NodeIGuildHotUpdateService: WrapperApi
-  NodeIKernelMsgBackupService: WrapperApi
-  NodeIKernelRemotingService: WrapperApi
-  NodeIKernelAVSDKService: WrapperApi
+  NodeIQQNTWrapperNetwork: WrapperApiWithMethods
+  NodeIKernelGuildService: WrapperApiWithMethods
+  NodeIKernelTipOffService: WrapperApiWithMethods
+  NodeIKernelFileAssistantService: WrapperApiWithMethods
+  NodeIKernelQiDianService: WrapperApiWithMethods
+  NodeIKernelStorageCleanService: WrapperApiWithMethods
+  NodeIKernelSettingService: WrapperApiWithMethods
+  NodeIKernelYellowFaceForManagerService: WrapperApiWithMethods
+  NodeIKernelYellowFaceService: WrapperApiWithMethods
+  NodeIKernelNewFeedService: WrapperApiWithMethods
+  NodeIKernelFeedService: WrapperApiWithMethods
+  NodeIKernelRichMediaService: WrapperApiWithMethods
+  NodeIKernelAvatarService: WrapperApiWithMethods
+  NodeIKernelRDeliveryService: WrapperApiWithMethods
+  NodeIKernelDirectSessionService: WrapperApiWithMethods
+  NodeIKernelConfigMgrService: WrapperApiWithMethods
+  NodeIKernelRecentContactService: WrapperApiWithMethods
+  NodeIKernelProfileService: WrapperApiWithMethods
+  NodeIKernelMsgService: WrapperApiWithMethods
+  NodeIKernelGroupService: WrapperApiWithMethods
+  NodeIKernelSearchService: WrapperApiWithMethods
+  NodeIKernelBuddyService: WrapperApiWithMethods
+  NodeIKernelMSFService: WrapperApiWithMethods
+  NodeIKernelNodeMiscService: WrapperApiWithMethods
+  NodeIGuildHotUpdateService: WrapperApiWithMethods
+  NodeIKernelMsgBackupService: WrapperApiWithMethods
+  NodeIKernelRemotingService: WrapperApiWithMethods
+  NodeIKernelAVSDKService: WrapperApiWithMethods
+}
+export type WrapperPaths = DeepPath<Wrapper>
+export type WrapperResponsePaths = `${WrapperPaths}:response`
+export type WrapperResolvePath<T extends WrapperPaths> = ResolvePath<Wrapper, T>
+
+// 监听器会包含调用参数以及响应结果
+export type WrapperEventMap = {
+  [K in WrapperPaths as K extends string ? K : never]: [
+    {
+      applyRet: Awaited<ReturnType<WrapperResolvePath<K>>>
+      params: Parameters<WrapperResolvePath<K>>
+    }
+  ]
+}
+// 拦截器可以拦截调用前或调用后
+type WrapperAllPaths = WrapperPaths | WrapperResponsePaths
+type getParams<T extends WrapperAllPaths> = T extends `${infer Name}:response`
+  ? {
+      applyRet: ReturnType<WrapperResolvePath<Name>>
+      params: Parameters<WrapperResolvePath<Name>>
+    }
+  : Parameters<WrapperResolvePath<T>>
+type getReturn<T extends WrapperAllPaths> = T extends `${infer Name}:response`
+  ? ReturnType<WrapperResolvePath<Name>>
+  : Parameters<WrapperResolvePath<T>>
+export type WrapperInterceptors = {
+  [K in WrapperAllPaths]?: (params: getParams<K>) => getReturn<K> | void
 }

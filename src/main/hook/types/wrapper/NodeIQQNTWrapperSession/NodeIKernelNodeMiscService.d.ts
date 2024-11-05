@@ -1,6 +1,206 @@
+/**
+ * Node杂项服务事件监听器接口，用于处理与杂项服务相关的各种事件。
+ */
+interface KernelNodeMiscListener {
+  /**
+   * 登录完成时触发
+   */
+  onLoginFinish: () => void
+
+  /**
+   * 主窗口操作事件触发
+   */
+  onMainWindowAction: () => void
+
+  /**
+   * QQ关闭后隐藏UI时触发
+   */
+  onQQCloseThenHideUi: () => void
+
+  /**
+   * QQ关闭后关闭UI时触发
+   */
+  onQQCloseThenCloseUi: () => void
+
+  /**
+   * QQ关闭后退出程序时触发
+   */
+  onQQCloseThenExit: () => void
+
+  /**
+   * QQ发送按键按钮更改时触发
+   */
+  onQQChangeSendKeyButton: () => void
+
+  /**
+   * QQ截图完成时触发
+   */
+  onQQScreenShotComplete: () => void
+
+  /**
+   * QQ屏幕录制完成时触发
+   */
+  onQQScreenRecordingComplete: () => void
+
+  /**
+   * QQ截图完成 (新工具) 时触发
+   */
+  onQQScreenShotCompleteNT: () => void
+
+  /**
+   * QQ屏幕录制完成 (新工具) 时触发
+   */
+  onQQScreenRecordingCompleteNT: () => void
+
+  /**
+   * QQ屏幕OCR开始时触发
+   */
+  onQQScreenOCRBegin: () => void
+
+  /**
+   * QQ屏幕OCR完成时触发
+   */
+  onQQScreenOCRComplete: () => void
+
+  /**
+   * QQ公共屏幕OCR完成时触发
+   */
+  onQQScreenOCRPublicComplete: () => void
+
+  /**
+   * QQ截图工具报告时触发
+   */
+  onQQScreenShotToolReport: () => void
+
+  /**
+   * QQ屏幕代理连接时触发
+   */
+  onQQScreenAgentConnected: () => void
+
+  /**
+   * QQ屏幕代理断开连接时触发
+   */
+  onQQScreenAgentDisConnected: () => void
+
+  /**
+   * 在Catalina中检查录制是否已记录时触发
+   */
+  onQQScreenCheckRecordInInCatalina: () => void
+
+  /**
+   * QQ屏幕注册快捷键时触发
+   */
+  onQQScreenRegisterShortCut: () => void
+
+  /**
+   * QQ屏幕版本不可用检查失败时触发
+   */
+  onQQScreenCheckVersionAvailableFail: () => void
+
+  /**
+   * QQ屏幕长截图事件触发
+   */
+  onQQScreenLongCaptureEvent: () => void
+
+  /**
+   * 显示QQ屏幕位图时触发
+   */
+  onQQScreenDisplayBitmaps: () => void
+
+  /**
+   * 显示QQ屏幕URL时触发
+   */
+  onQQScreenDisplayUrl: () => void
+
+  /**
+   * 获取QQ屏幕窗口信息时触发
+   */
+  onQQScreenWindowsInfo: () => void
+
+  /**
+   * QQ屏幕检测结果时触发
+   */
+  onQQScreenDetectResult: () => void
+
+  /**
+   * QQ长截图完成 (新工具) 时触发
+   */
+  onQQScreenLongShotCompleteNT: () => void
+
+  /**
+   * 接收QQ屏幕事件时触发
+   */
+  onQQScreenReceiveEvent: () => void
+
+  /**
+   * 显示主面板时触发
+   */
+  onQQShowMainPanel: () => void
+
+  /**
+   * 获取重新启动参数时触发
+   */
+  onGetRelaunchParams: () => void
+
+  /**
+   * 获取跳转公会信息时触发
+   */
+  onGetJumpGuild: () => void
+
+  /**
+   * 检查是否有可用的Sidecar设备时触发
+   */
+  oncheckIfHaveAvailableSidecarDevice: () => void
+
+  /**
+   * 从Sidecar获取数据时触发
+   */
+  onGetDataFromSidecar: () => void
+
+  /**
+   * 截图工具报告（新工具）时触发
+   */
+  onScreenShotToolReportNT: () => void
+
+  /**
+   * 接收到小程序消息时触发
+   */
+  onRecvMiniAppMsg: () => void
+
+  /**
+   * 小程序连接时触发
+   */
+  onMiniAppConnected: () => void
+
+  /**
+   * 小程序断开连接时触发
+   */
+  onMiniAppDisconnected: () => void
+
+  /**
+   * 小程序下载完成时触发
+   */
+  onMiniAppDownloadComplete: () => void
+
+  /**
+   * 小程序下载进度更新时触发
+   */
+  onMininAppDownloadProgress: () => void
+
+  /**
+   * 小游戏下载完成时触发
+   */
+  onMiniGameDownloadComplete: () => void
+
+  /**
+   * 小游戏下载进度更新时触发
+   */
+  onMininGameDownloadProgress: () => void
+}
+
 export interface NodeIKernelNodeMiscService {
-  addKernelNodeMiscListener(listener: (event: any) => void): void // 根据实际事件类型替换 `any`
-  removeKernelNodeMiscListener(listener: (event: any) => void): void // 根据实际事件类型替换 `any`
+  addKernelNodeMiscListener(listener: KernelNodeMiscListener): void // 根据实际事件类型替换 `any`
+  removeKernelNodeMiscListener(listener: KernelNodeMiscListener): void // 根据实际事件类型替换 `any`
 
   startSession(): void // 启动会话
   encodeAES(data: string, key: string): string // 使用 AES 加密数据

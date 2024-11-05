@@ -7,7 +7,16 @@ interface KernelLoginEventCallbacks {
   onQRCodeLoginPollingStarted: () => void
   onQRCodeSessionUserScaned: () => void
   onLoginState: () => void
-  onQRCodeLoginSucceed: () => void
+  onQRCodeLoginSucceed: (userInfo: {
+    account: string
+    mainAccount: string
+    uin: string
+    uid: string
+    nickName: ''
+    gender: number
+    age: number
+    faceUrl: string
+  }) => boolean
   onQRCodeSessionFailed: () => void
   onLoginFailed: () => void
   onLogoutSucceed: () => void

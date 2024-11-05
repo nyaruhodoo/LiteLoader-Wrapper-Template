@@ -1,9 +1,359 @@
 import type { Element, ChatType } from './Element'
 
+/**
+ * 消息事件监听器接口，用于处理消息相关的各种事件。
+ */
+interface KernelMsgListener {
+  /**
+   * 接收到消息时触发
+   */
+  onRecvMsg: () => void
+
+  /**
+   * 接收到文件消息时触发
+   */
+  onFileMsgCome: () => void
+
+  /**
+   * 接收到在线文件消息时触发
+   */
+  onRecvOnlineFileMsg: () => void
+
+  /**
+   * 系统消息通知触发
+   */
+  onSysMsgNotification: () => void
+
+  /**
+   * 接收到系统消息时触发
+   */
+  onRecvSysMsg: () => void
+
+  /**
+   * 接收到从服务器到客户端的消息时触发
+   */
+  onRecvS2CMsg: () => void
+
+  /**
+   * 在线设备信息触发
+   */
+  onLineDev: () => void
+
+  /**
+   * 被踢下线时触发
+   */
+  onKickedOffLine: () => void
+
+  /**
+   * 消息设置更新时触发
+   */
+  onMsgSettingUpdate: () => void
+
+  /**
+   * 添加发送的消息时触发
+   */
+  onAddSendMsg: () => void
+
+  /**
+   * 消息撤回时触发
+   */
+  onMsgRecall: () => void
+
+  /**
+   * 发送消息出错时触发
+   */
+  onSendMsgError: () => void
+
+  /**
+   * 接收到消息服务器响应传输信息时触发
+   */
+  onRecvMsgSvrRspTransInfo: () => void
+
+  /**
+   * 消息信息列表更新时触发
+   */
+  onMsgInfoListUpdate: () => void
+
+  /**
+   * 消息信息列表添加时触发
+   */
+  onMsgInfoListAdd: () => void
+
+  /**
+   * 消息安全通知时触发
+   */
+  onMsgSecurityNotify: () => void
+
+  /**
+   * 删除消息时触发
+   */
+  onMsgDelete: () => void
+
+  /**
+   * 消息事件列表更新时触发
+   */
+  onMsgEventListUpdate: () => void
+
+  /**
+   * 自定义撤回配置更新时触发
+   */
+  onCustomWithdrawConfigUpdate: () => void
+
+  /**
+   * 通道频率限制信息更新时触发
+   */
+  onChannelFreqLimitInfoUpdate: () => void
+
+  /**
+   * 未读消息计数更新时触发
+   */
+  onUnreadCntUpdate: () => void
+
+  /**
+   * 首次查看后未读消息计数更新时触发
+   */
+  onUnreadCntAfterFirstView: () => void
+
+  /**
+   * 联系人未读消息计数更新时触发
+   */
+  onContactUnreadCntUpdate: () => void
+
+  /**
+   * 消息摘要更新时触发
+   */
+  onMsgAbstractUpdate: () => void
+
+  /**
+   * 草稿更新时触发
+   */
+  onDraftUpdate: () => void
+
+  /**
+   * 富媒体上传完成时触发
+   */
+  onRichMediaUploadComplete: () => void
+
+  /**
+   * 富媒体下载完成时触发
+   */
+  onRichMediaDownloadComplete: () => void
+
+  /**
+   * 富媒体进度更新时触发
+   */
+  onRichMediaProgerssUpdate: () => void
+
+  /**
+   * 群组文件信息更新时触发
+   */
+  onGroupFileInfoUpdate: () => void
+
+  /**
+   * 搜索群组文件信息更新时触发
+   */
+  onSearchGroupFileInfoUpdate: () => void
+
+  /**
+   * 群组转账信息更新时触发
+   */
+  onGroupTransferInfoUpdate: () => void
+
+  /**
+   * 群组文件信息添加时触发
+   */
+  onGroupFileInfoAdd: () => void
+
+  /**
+   * 群组转账信息添加时触发
+   */
+  onGroupTransferInfoAdd: () => void
+
+  /**
+   * 表情下载完成时触发
+   */
+  onEmojiDownloadComplete: () => void
+
+  /**
+   * 表情资源更新时触发
+   */
+  onEmojiResourceUpdate: () => void
+
+  /**
+   * 消息同步开始时触发
+   */
+  onNtMsgSyncStart: () => void
+
+  /**
+   * 首次查看消息同步结束时触发
+   */
+  onNtFirstViewMsgSyncEnd: () => void
+
+  /**
+   * 消息同步结束时触发
+   */
+  onNtMsgSyncEnd: () => void
+
+  /**
+   * 广播助手下载完成时触发
+   */
+  onBroadcastHelperDownloadComplete: () => void
+
+  /**
+   * 广播助手进度更新时触发
+   */
+  onBroadcastHelperProgerssUpdate: () => void
+
+  /**
+   * 输入状态推送时触发
+   */
+  onInputStatusPush: () => void
+
+  /**
+   * 导入旧数据库进度更新时触发
+   */
+  onImportOldDbProgressUpdate: () => void
+
+  /**
+   * 消息二维码状态变化时触发
+   */
+  onMsgQRCodeStatusChanged: () => void
+
+  /**
+   * 在线状态小图标下载推送时触发
+   */
+  onlineStatusSmallIconDownloadPush: () => void
+
+  /**
+   * 首次查看群组公会映射时触发
+   */
+  onFirstViewGroupGuildMapping: () => void
+
+  /**
+   * 在线状态大图标下载推送时触发
+   */
+  onlineStatusBigIconDownloadPush: () => void
+
+  /**
+   * 首次查看直接消息更新时触发
+   */
+  onFirstViewDirectMsgUpdate: () => void
+
+  /**
+   * 事件更新时触发
+   */
+  onFeedEventUpdate: () => void
+
+  /**
+   * 公会交互更新时触发
+   */
+  onGuildInteractiveUpdate: () => void
+
+  /**
+   * 公会顶部动态更新时触发
+   */
+  onGuildTopFeedUpdate: () => void
+
+  /**
+   * 公会通知摘要更新时触发
+   */
+  onGuildNotificationAbstractUpdate: () => void
+
+  /**
+   * 已读动态事件更新时触发
+   */
+  onReadFeedEventUpdate: () => void
+
+  /**
+   * 临时聊天信息更新时触发
+   */
+  onTempChatInfoUpdate: () => void
+
+  /**
+   * 用户在线状态变化时触发
+   */
+  onUserOnlineStatusChanged: () => void
+
+  /**
+   * 命中表情关键字结果时触发
+   */
+  onHitEmojiKeywordResult: () => void
+
+  /**
+   * 命中相关表情结果时触发
+   */
+  onHitRelatedEmojiResult: () => void
+
+  /**
+   * 命中客服相关表情结果时触发
+   */
+  onHitCsRelatedEmojiResult: () => void
+
+  /**
+   * 用户标签状态变化时触发
+   */
+  onUserTabStatusChanged: () => void
+
+  /**
+   * 消息框变化时触发
+   */
+  onMsgBoxChanged: () => void
+
+  /**
+   * 日志级别变化时触发
+   */
+  onLogLevelChanged: () => void
+
+  /**
+   * 用户频道标签状态变化时触发
+   */
+  onUserChannelTabStatusChanged: () => void
+
+  /**
+   * 群组公会更新时触发
+   */
+  onGroupGuildUpdate: () => void
+
+  /**
+   * 抢红包密码时触发
+   */
+  onGrabPasswordRedBag: () => void
+
+  /**
+   * 红点变化时触发
+   */
+  onRedTouchChanged: () => void
+
+  /**
+   * 接收到 UDC 标志时触发
+   */
+  onRecvUDCFlag: () => void
+
+  /**
+   * 接收到群组公会标志时触发
+   */
+  onRecvGroupGuildFlag: () => void
+
+  /**
+   * 用户安全质量变化时触发
+   */
+  onUserSecQualityChanged: () => void
+
+  /**
+   * 带富链接信息的消息更新时触发
+   */
+  onMsgWithRichLinkInfoUpdate: () => void
+
+  /**
+   * 公会消息 AB 标志变化时触发
+   */
+  onGuildMsgAbFlagChanged: () => void
+}
+
 export interface NodeIKernelMsgService {
-  addKernelMsgListener(listener: unknown): void // 添加内核消息监听器
+  addKernelMsgListener(listener: KernelMsgListener): void // 添加内核消息监听器
   addKernelMsgImportToolListener(listener: unknown): void // 添加内核消息导入工具监听器
-  removeKernelMsgListener(listener: unknown): void // 移除内核消息监听器
+  removeKernelMsgListener(listener: KernelMsgListener): void // 移除内核消息监听器
   addKernelTempChatSigListener(listener: unknown): void // 添加临时聊天信号监听器
   removeKernelTempChatSigListener(listener: unknown): void // 移除临时聊天信号监听器
   setAutoReplyTextList(textList: string[]): void // 设置自动回复文本列表
@@ -30,10 +380,10 @@ export interface NodeIKernelMsgService {
   getMsgSetting(): any // 获取消息设置
   setMsgSetting(setting: any): void // 设置消息设置
   sendMsg(
-    p1: string,
-    p2: { chatType: ChatType; peerUid: string; guildId: string },
-    p3: Omit<Element, 'elementGroupId' | 'extBufForUI'>[],
-    p4: Map<unknown, unknown>
+    msgId: string,
+    target: { chatType: ChatType; peerUid: string; guildId: string },
+    elements: Omit<Element, 'elementGroupId' | 'extBufForUI'>[],
+    map: Map<unknown, unknown>
   ): WrapperAsyncResponse // 发送消息
   addSendMsg(msg: string): void // 添加待发送消息
   cancelSendMsg(msgId: string): void // 取消发送消息
