@@ -120,8 +120,11 @@ starWand.Session?.getMsgService().sendMsg()
 
 ```ts
 export const videoFileEventInterceptors = {
-  [EventEnum.sendMsg](sendMsg: Parameters<NodeIKernelMsgService['sendMsg']>) {
-    file2Video(sendMsg)
+  [EventEnum.sendMsg](msg) {
+    // 另起一个函数准备好参数后通过 Session 再次还原本次逻辑
+    file2Video(msg)
+
+    // 即时中断
     throw new Error('喵喵喵')
   }
 }
