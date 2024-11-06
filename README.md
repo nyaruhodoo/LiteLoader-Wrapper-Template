@@ -7,10 +7,8 @@
 
 # LiteLoader-Wrapper-Template
 
-自用插件开发模板，与其他模板不同的是提供了一些 hook 功能(从头hook到脚，侵入式很强)  
-大概能避免初次接触QQ插件开发时无从下手到处去问？  
-借助该模板大部分初级插件均可在几十行代码左右实现，只需要你具备一些 JS 相关基础  
-比如屏蔽更新之类的小功能，一行就足够了  
+自用插件开发模板，与其他模板不同的是提供了一些 hook 功能 (从头hook到脚，侵入式很强)  
+或许能避免一些新手开发者走弯路，借助该模板大部分初级功能均可在几十行代码左右实现，只需要你具备一些 JS 相关基础，比如屏蔽更新一行就够了  
 ~~如果没写出来不关我事啊，电报找一个叫il的，他亲口说的~~
 
 ## 一些待办事项
@@ -23,6 +21,9 @@
 - [ ] 使用其他构建工具替换 Vite，目前所用的这一套还是太笨重了，在很多地方都存在不少问题
 - [ ] 集成插件自更新功能
 
+~~仓库是早上建的，坑是晚上弃的~~  
+~~其实待办事项是写给你们看的，等你们来添砖加瓦~~
+
 ## 它具体可以做些什么？
 
 - 使用 `eventBlacklist` 禁止 QQ 执行某些逻辑
@@ -30,9 +31,6 @@
 - 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
 - 使用 `NodeIQQNTWrapperSession` 直接调用 QQ 内部 API
 - 快速创建插件配置相关UI(有点精简)
-
-~~仓库是早上建的，坑是晚上弃的~~  
-~~其实待办事项是写给你们看的，等你们来添砖加瓦~~
 
 ## 一个不怎么样的文档
 
@@ -61,13 +59,25 @@ class StarWand {
 
 ```ts
 interface ConfigType {
-  // 是否打印日志
+  /**
+   * 是否开启log
+   */
   log?: boolean | RegExp
+  /**
+   * 调整 inspect 模式下的打印深度
+   */
   logDepth?: number
+  /**
+   * json 可以完整打印，inspect 格式更好看
+   */
   logType?: 'inspect' | 'json'
-  // 需要忽略的黑名单事件
+  /**
+   * 需要中断的黑名单事件
+   */
   eventBlacklist?: (WrapperPaths | RegExp)[]
-  // 拦截事件，可以修改参数
+  /**
+   * 事件拦截器，可以拦截请求参数以及返回值
+   */
   eventInterceptors?: WrapperInterceptors
 }
 ```
@@ -84,14 +94,36 @@ interface ConfigType {
 
 ```ts
 // 实际使用起来就是这个样子
+import { hookWrapper, starWand } from '@/main/hook/hookWrapper'
+
+// main 中可以直接拿返回值，其他文件中可通过 import 拿
 const starWand = await hookWrapper()
 starWand.Session?.getMsgService().sendMsg()
 ```
 
-本模板只会为这些函数提供一些类型支持，但不会进行额外封装  
+本模板只会为这些函数提供一些类型支持，但不会进行额外封装(至少短期内不会)  
 你所调用的 API 都是原汁原味的
 
 你可能注意到 hookWrapper 会返回一个 promise，这是因为大多数 API 都需要登陆后调用，所以 await 实际上是在等待登录
+
+### eventInterceptors 的一些注意事项
+
+在拦截函数参数时使用 `NodeIQQNTWrapperSession/create/getMsgService/sendMsg`  
+在拦截响应时使用 `NodeIQQNTWrapperSession/create/getMsgService/sendMsg:response`
+
+返回值是可选的，如果没有指定返回值那么会通过 `??` 默认返回原参数  
+同时你需要额外注意返回值的类型，虽然我已经在类型上限制了你，但一定会有人尝试跳过  
+如果参数或返回值与原本值类型不同，这可能会导致崩溃，我主要想说的是同步和异步的问题，也就是本该是同步的代码你不能给它一个 promise  
+如果你的代码需要通过异步去生成一个参数，那么你可以参考我的插件
+
+```ts
+export const videoFileEventInterceptors = {
+  [EventEnum.sendMsg](sendMsg: Parameters<NodeIKernelMsgService['sendMsg']>) {
+    file2Video(sendMsg)
+    throw new Error('喵喵喵')
+  }
+}
+```
 
 ## 类型(很很很很重要)
 
@@ -99,11 +131,12 @@ starWand.Session?.getMsgService().sendMsg()
 - 全局注入了 `global.d.ts` 暴露 `LiteLoader` 相关API (类型可能有误)
 - 增加了 `contextBridge.d.ts` 用于在 `preload` 与 `renderer` 之间暴露接口时同步类型
 
-**StarWand 中所有类型，都是基于 Wrapper 类型用体操动态生成的**  
-**Wrapper 类型本身又是通过 ChatGPT 自动生成额外加上人工修正**  
-基于以上两点，你不要盲目依赖类型，在调用相关函数时务必要先通过 `log` 提前确认好参数是否有误，然后再进行调用  
+**StarWand 中所有类型，都是基于 Wrapper 类型通过小学生广播体操实现的**  
+**Wrapper 类型本身又是通过 ChatGPT 自动生成额外加上人工修正**
+
+基于以上两点，请不要盲目依赖类型，在调用相关函数时务必要先通过 `log` 提前确认好参数是否有误，然后再进行调用  
 或许你会觉得很鸡肋，但很抱歉本项目处于一个十分初级的阶段，我个人也并无太多精力去收集所有类型  
-如果你在开发时遇到了不如意的类型问题也请不要直接忽略或者进行断言，请直接进行 PR 这样本项目才会越来越好
+如果你在开发时遇到了不如意的类型问题也请不要直接忽略或者进行断言，请直接进行 PR 来帮助完善 Wrapper 类型，这样本项目才能减轻更多开发者的开发成本
 
 ## 使用时的一些杂项内容
 
