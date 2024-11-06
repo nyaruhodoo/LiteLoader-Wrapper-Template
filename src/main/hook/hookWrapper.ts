@@ -134,12 +134,33 @@ class StarWand {
             })
           }
 
-          // 额外派发事件方便监听处理
-          // @ts-expect-error  - 不要管它
-          this.wrapperEmitter.emit(key, {
-            applyRet,
-            params: args
-          })
+          if (applyRet instanceof Promise) {
+            applyRet.then(
+              (res) => {
+                const emitData = {
+                  applyRet: res,
+                  params: args
+                }
+                // @ts-expect-error  - 我都有点看不太懂了
+                this.wrapperEmitter.emit(key, emitData)
+              },
+              (err) => {
+                const emitData = {
+                  applyRet: err,
+                  params: args
+                }
+                // @ts-expect-error  - 我都有点看不太懂了
+                this.wrapperEmitter.emit(key, emitData)
+              }
+            )
+          } else {
+            const emitData = {
+              applyRet,
+              params: args
+            }
+            // @ts-expect-error  - 我都有点看不太懂了
+            this.wrapperEmitter.emit(key, emitData)
+          }
 
           this.logFn({
             argArray: args,
