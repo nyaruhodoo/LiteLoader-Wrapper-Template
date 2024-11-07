@@ -143,6 +143,12 @@ export const videoFileEventInterceptors = {
 或许你会觉得很鸡肋，但很抱歉本项目处于一个十分初级的阶段，我个人也并无太多精力去收集所有类型  
 如果你在开发时遇到了不如意的类型问题也请不要直接忽略或者进行断言，请直接进行 PR 来帮助完善 Wrapper 类型，这样本项目才能减轻更多开发者的开发成本
 
+## IPC
+
+项目里保留了一部分 IPC 相关的内容，因为我更喜欢 wrapper 所以是属于废弃部分，但难免还是有人会用所以就放在那里了  
+如果哪天 wrapper 彻底挂壁那么我可能会考虑再捡回来...
+
+
 ## 使用时的一些杂项内容
 
 ### 修改 manifest & defaultConfig & createConfigViewConfig
@@ -170,34 +176,8 @@ bc.addEventListener('message', (event) => {
 
 ### 新旧配置合并策略
 
-在调用 `Utils.getConfig` 时，会基于当前 `defaultConfig` 与用户的本地配置进行一次深度合并
-
-```ts
-static mergeConfig(oldConfig: Record<string, any>, newConfig: ConfigType) {
-    const targetObj = structuredClone(newConfig)
-
-    for (const [key, value] of Object.entries(oldConfig)) {
-      // 废弃的属性
-      if (!Object.hasOwn(targetObj, key)) continue
-      // 类型已更新
-      if (Object.prototype.toString.call(value) !== Object.prototype.toString.call(targetObj[key])) continue
-      // 合并数组
-      if (Array.isArray(value)) {
-        targetObj[key] = [...new Set([...value, ...targetObj[key]])]
-        continue
-      }
-      // 处理对象类型，进行深层合并
-      if (typeof value === 'object' && value) {
-        targetObj[key] = this.mergeConfig(value, targetObj[key])
-        continue
-      }
-      // 基本值以本地配置为准
-      targetObj[key] = value
-    }
-
-    return targetObj
-  }
-```
+在调用 `Utils.getConfig` 时，会基于当前 `defaultConfig` 与用户的本地配置进行一次深度合并  
+或许意义不是很大，但要不要用取决于你自己
 
 ### 构建相关
 
@@ -207,12 +187,12 @@ main、preload、renderer 3个文件都是独立打包不会存在共同引用�
 **node_modules 中的文件也会跟随打包，目的是为了它人使用插件时不需要在安装依赖**  
 **唯一的注意事项是不要在渲染层引用 node 环境下的依赖**
 
-### 路径
+### 路径相关
 
 - 增加了常用的 `@` 来引用 `src` 目录
 - 增加了 `@/manifest` 来引用 `manifest.json` 文件
 
-### 引用静态资源
+### 静态资源相关
 
 ```ts
 import styleUrl from './index.scss?url'
