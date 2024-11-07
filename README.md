@@ -31,7 +31,7 @@
 - 使用 `eventBlacklist` 禁止 QQ 执行某些逻辑
 - 使用 `eventInterceptors` 修改 QQ 调用内部函数时的参数以及返回值
 - 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
-- 使用 `NodeIQQNTWrapperSession` 直接调用 QQ 内部 API
+- 使用 `Session` 直接调用 QQ 内部 API
 - 快速创建插件配置相关UI(有点精简)
 
 ## 一个不怎么样的文档
