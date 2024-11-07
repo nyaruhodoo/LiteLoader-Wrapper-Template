@@ -145,8 +145,9 @@ export const videoFileEventInterceptors = {
 
 ## IPC
 
+具体也请查看新手文档[](https://github.com/nyaruhodoo/LiteLoader-BeginnerTutorial?tab=readme-ov-file#%E5%9C%A8-ipc-%E5%81%9A%E7%82%B9%E4%BB%80%E4%B9%88)  
 项目里保留了一部分 IPC 相关的内容，因为我更喜欢 wrapper 所以是属于废弃部分，但难免还是有人会用所以就放在那里了  
-如果哪天 wrapper 彻底挂壁那么我可能会考虑再捡回来...
+除非 wrapper 彻底挂壁那么我可能会考虑再捡回来...
 
 
 ## 使用时的一些杂项内容
