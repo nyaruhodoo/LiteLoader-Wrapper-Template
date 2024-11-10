@@ -1,4 +1,4 @@
-import type { Element, ChatType } from './Element'
+import type { Element, ChatType, PeerInfo } from './Element'
 
 /**
  * 消息事件监听器接口，用于处理消息相关的各种事件。
@@ -25,9 +25,9 @@ interface KernelMsgListener {
   onSysMsgNotification: () => void
 
   /**
-   * 接收到系统消息时触发
+   * 接收到系统消息时触发(一个字节流)
    */
-  onRecvSysMsg: () => void
+  onRecvSysMsg: (params: number[]) => boolean
 
   /**
    * 接收到从服务器到客户端的消息时触发
@@ -117,12 +117,80 @@ interface KernelMsgListener {
   /**
    * 联系人未读消息计数更新时触发
    */
-  onContactUnreadCntUpdate: () => void
+  onContactUnreadCntUpdate: (
+    params: Map<
+      number,
+      Map<
+        string,
+        {
+          show_unread_cnt: {
+            type: number
+            cnt: number
+          }
+          all_unread_cnt: {
+            type: number
+            cnt: number
+          }
+          atme_unread_cnt: {
+            type: number
+            cnt: number
+          }
+          atall_unread_cnt: {
+            type: number
+            cnt: number
+          }
+          peer: PeerInfo
+          related_to_me_string: string
+          related_to_me_cnt: number
+          last_related_to_me_type: number
+          related_to_me_string_time: string
+          last_related_to_feed_type: number
+          header_url: Uint8Array
+        }
+      >
+    >
+  ) => boolean
 
   /**
    * 消息摘要更新时触发
    */
-  onMsgAbstractUpdate: () => void
+  onMsgAbstractUpdate: (
+    params: {
+      peer: PeerInfo
+      senderUid: string
+      sendMemberName: string
+      sendNickName: string
+      sendStatus: number
+      elements: [
+        {
+          elementType: 1
+          elementSubType: null
+          content: string
+          custom_content: null
+          index: null
+          isSetProclamation: null
+          isSetEssence: null
+          operatorRole: null
+          operatorTinyId: null
+          fileName: null
+          tinyId: null
+          msgSeq: null
+          msgId: null
+          emojiId: null
+          emojiType: null
+          localGrayTipType: null
+          grayTiPElement: null
+          textGiftElement: null
+          calendarElement: null
+          channelStateElement: null
+          onlineFileMsgCnt: null
+        }
+      ]
+      abstractTime: string
+      msgType: number
+      msgSeq: string
+    }[]
+  ) => boolean
 
   /**
    * 草稿更新时触发
@@ -137,7 +205,49 @@ interface KernelMsgListener {
   /**
    * 富媒体下载完成时触发
    */
-  onRichMediaDownloadComplete: () => void
+  onRichMediaDownloadComplete: (params: {
+    fileModelId: string
+    msgElementId: string
+    msgId: string
+    fileId: string
+    fileProgress: string
+    fileSpeed: string
+    fileErrCode: string
+    fileErrMsg: string
+    fileDownType: number
+    thumbSize: number
+    filePath: string
+    totalSize: string
+    trasferStatus: number
+    step: number
+    commonFileInfo: {
+      fileModelId: string
+      msgId: string
+      elemId: string
+      uuid: string
+      subId: string
+      fileName: string
+      fileSize: string
+      msgTime: string
+      peerUid: string
+      chatType: ChatType
+      md5: string
+      md510m: string
+      sha: string
+      sha3: string
+      parent: null
+      favId: null
+      bizType: null
+      picThumbPath: null
+    }
+    fileSrvErrCode: string
+    clientMsg: string
+    businessId: number
+    userTotalSpacePerDay: null
+    userUsedSpacePerDay: null
+    msgRecord: null
+    chatType: null
+  }) => boolean
 
   /**
    * 富媒体进度更新时触发
@@ -172,7 +282,19 @@ interface KernelMsgListener {
   /**
    * 表情下载完成时触发
    */
-  onEmojiDownloadComplete: () => void
+  onEmojiDownloadComplete: (params: {
+    result: number
+    errMsg: string
+    emojiType: number
+    md5: string
+    resId: string
+    path: string
+    extraData: Map<unknown, unknown>
+    emojiId: string
+    emojiPackageId: string
+    downloadType: number
+    dynamicFacePath: string
+  }) => boolean
 
   /**
    * 表情资源更新时触发
@@ -381,7 +503,7 @@ export interface NodeIKernelMsgService {
   setMsgSetting(setting: any): void // 设置消息设置
   sendMsg(
     msgId: string,
-    target: { chatType: ChatType; peerUid: string; guildId: string },
+    peerInfo: PeerInfo,
     elements: Omit<Element, 'elementGroupId' | 'extBufForUI'>[],
     map: Map<unknown, unknown>
   ): WrapperAsyncResponse // 发送消息
@@ -397,7 +519,13 @@ export interface NodeIKernelMsgService {
   recallMsgs(msgIds: string[]): void // 撤回多条消息
   reeditRecallMsg(msgId: string): void // 重新编辑撤回消息
   forwardMsg(msgId: string, targetId: string): void // 转发消息
-  forwardMsgWithComment(msgId: string, targetId: string, comment: string): void // 带评论转发消息
+  forwardMsgWithComment(
+    msgId: string[],
+    peerInfo: PeerInfo,
+    target: PeerInfo[]
+  ): WrapperAsyncResponse<{
+    detailErr: Map<unknown, unknown>
+  }> // 带评论转发消息
   forwardSubMsgWithComment(msgId: string, targetId: string, comment: string): void // 带评论转发子消息
   forwardRichMsgInVist(msgId: string, targetId: string): void // 在Vist中转发富文本消息
   forwardFile(fileId: string, targetId: string): void // 转发文件
@@ -500,14 +628,14 @@ export interface NodeIKernelMsgService {
   setUnVisibleChannelCntInfo(info: any): void // 设置不可见频道计数信息
   setUnVisibleChannelTypeCntInfo(info: any): void // 设置不可见频道类型计数信息
   setVisibleGuildCntInfo(info: any): void // 设置可见公会计数信息
-  setMsgRead(msgId: string): WrapperAsyncResponse // 设置消息为已读
+  setMsgRead(peerInfo: PeerInfo): WrapperAsyncResponse // 设置消息为已读
   setAllC2CAndGroupMsgRead(): void // 设置所有C2C和群组消息为已读
   setGuildMsgRead(guildId: string): void // 设置公会消息为已读
   setAllGuildMsgRead(): void // 设置所有公会消息为已读
   setAllDirectMsgRead(): void // 设置所有直接消息为已读
   setMsgReadAndReport(msgId: string): void // 设置消息为已读并报告
   setSpecificMsgReadAndReport(msgId: string): void // 设置特定消息为已读并报告
-  setLocalMsgRead(msgId: string): void // 设置本地消息为已读
+  setLocalMsgRead(peerInfo: PeerInfo): WrapperAsyncResponse // 设置本地消息为已读
   setGroupGuildMsgRead(groupId: string): void // 设置群组公会消息为已读
   getGuildGroupTransData(): any // 获取公会群组转换数据
   setGroupGuildBubbleRead(groupId: string): void // 设置群组公会气泡为已读
@@ -537,7 +665,17 @@ export interface NodeIKernelMsgService {
   moveBottomEmojiTable(oldIndex: number, newIndex: number): void // 移动底部表情表
   modifyBottomEmojiTableSwitchStatus(status: boolean): void // 修改底部表情表开关状态
   fetchMarketEmoticonShowImage(emojiId: string): string // 获取市场表情显示图
-  fetchMarketEmoticonAioImage(emojiId: string): string // 获取市场表情AIO图
+  fetchMarketEmoticonAioImage(params: {
+    eId: string
+    epId: number
+    name: string
+    width: number
+    height: number
+    jobType: number
+    encryptKey: string
+    filePath: string
+    downloadType: number
+  }): WrapperAsyncResponse // 获取市场表情AIO图
   fetchMarketEmotionJsonFile(emojiId: string): any // 获取市场表情JSON文件
   getMarketEmoticonPath(emojiId: string): string // 获取市场表情路径
   getMarketEmoticonPathBySync(emojiId: string): string // 通过同步获取市场表情路径
@@ -579,16 +717,23 @@ export interface NodeIKernelMsgService {
     downloadType: number
     filePath: string
   }): void // 下载富媒体
-  getFirstUnreadMsgSeq(): number // 获取首个未读消息序列
+  getFirstUnreadMsgSeq(params: PeerInfo): WrapperAsyncResponse<{ seq: string }> // 获取首个未读消息序列
   getFirstUnreadCommonMsg(): any // 获取首个未读普通消息
   getFirstUnreadAtmeMsg(): any // 获取首个未读@我的消息
   getFirstUnreadAtallMsg(): any // 获取首个未读@所有人的消息
   getNavigateInfo(): any // 获取导航信息
   getChannelFreqLimitInfo(): any // 获取频道频率限制信息
   getRecentUseEmojiList(): any[] // 获取最近使用的表情列表
-  getRecentEmojiList(): any[] // 获取最近表情列表
+  getRecentEmojiList(params: number): WrapperAsyncResponse<{
+    emojiInfoList: {
+      updateTime: string
+      usedCount: number
+      emojiType: number
+      emojiId: string
+    }[]
+  }> // 获取最近表情列表
   setMsgEmojiLikes(
-    p1: { chatType: ChatType; peerUid: string; guildId: string },
+    peerInfo: PeerInfo,
     msgId: string,
     emojiId: string,
     emojiCount: string,
@@ -598,10 +743,7 @@ export interface NodeIKernelMsgService {
   setMsgEmojiLikesForRole(msgId: string, role: string, likes: number): void // 设置角色的消息表情点赞数
   clickInlineKeyboardButton(buttonId: string): void // 点击内联键盘按钮
   setCurOnScreenMsg(msgId: string): void // 设置当前屏幕消息
-  setCurOnScreenMsgForMsgEvent(
-    p1: { chatType: ChatType; peerUid: string; guildId: string },
-    p2: Map<string, Uint8Array>
-  ): void // 为消息事件设置当前屏幕消息
+  setCurOnScreenMsgForMsgEvent(peerInfo: PeerInfo, p2: Map<string, Uint8Array>): void // 为消息事件设置当前屏幕消息
   getMiscData(string): WrapperAsyncResponse // 获取杂项数据
   setMiscData(data: any): void // 设置杂项数据
   getBookmarkData(): any // 获取书签数据
@@ -649,7 +791,12 @@ export interface NodeIKernelMsgService {
   registerSysMsgNotification(callback: (msg: any) => void): void // 注册系统消息通知
   unregisterSysMsgNotification(): void // 注销系统消息通知
   sendSsoCmdReqByContend(cmd: string): void // 发送SSO命令请求
-  enterOrExitAio(isEnter: boolean): void // 进入或退出AIO模式
+  enterOrExitAio(
+    params: {
+      peer: PeerInfo
+      option: number
+    }[]
+  ): WrapperAsyncResponse // 进入或退出AIO模式
   prepareTempChat(): void // 准备临时聊天
   getTempChatInfo(): any // 获取临时聊天信息
   setContactLocalTop(contactId: string): void // 设置联系人置顶
@@ -661,7 +808,14 @@ export interface NodeIKernelMsgService {
   outputGuildUnreadInfo(): any // 输出公会未读信息
   checkMsgWithUrl(url: string): void // 检查消息中的URL
   checkTabListStatus(): WrapperAsyncResponse // 检查标签列表状态
-  getABatchOfContactMsgBoxInfo(batchId: string): any // 获取批次联系人消息盒子信息
+  getABatchOfContactMsgBoxInfo(params: PeerInfo[]): WrapperAsyncResponse<{
+    contactMsgBoxInfos: {
+      contact: PeerInfo
+      firstUnreadMsgInfo: { msgSeq: string; msgTime: string; highlightDigest: string }
+      unreadCnt: string
+      listOfSpecificEventTypeInfosInMsgBox: unknown[]
+    }[]
+  }> // 获取批次联系人消息盒子信息
   insertMsgToMsgBox(msg: any): void // 插入消息到消息盒子
   isHitEmojiKeyword(keyword: string): boolean // 是否命中表情关键字
   getKeyWordRelatedEmoji(keyword: string): any[] // 获取与关键字相关的表情

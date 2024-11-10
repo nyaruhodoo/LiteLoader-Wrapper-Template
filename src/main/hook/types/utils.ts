@@ -31,7 +31,7 @@ type SplitPath<Path extends string> = Path extends `${infer Head}/${infer Tail}`
  * @template T - 目标对象类型
  * @template Prefix - 当前路径前缀，默认为 ''
  */
-type DeepPath<
+export type DeepPath<
   T,
   Prefix extends string = '',
   Depth extends any[] = [],

@@ -13,7 +13,7 @@ interface ConfigType {
   /**
    * 调整 inspect 模式下的打印深度
    */
-  logDepth?: number
+  logDepth?: number | null
   /**
    * json 可以完整打印，inspect 格式更好看
    */
@@ -44,7 +44,7 @@ class StarWand {
     if (!this.config.log) return
     if (typeof this.config.log !== 'boolean' && !this.config.log.test(key)) return
 
-    const depth = this.config.logDepth ?? 2
+    const depth = this.config.logDepth
 
     const logUtils = {
       inspect(params: unknown) {

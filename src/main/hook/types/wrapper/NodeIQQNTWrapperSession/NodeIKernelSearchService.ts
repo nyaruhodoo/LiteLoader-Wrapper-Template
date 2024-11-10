@@ -1,19 +1,82 @@
-/**
- * NodeIKernelSearchService 接口定义
- * 提供各种搜索功能，包括对陌生人、群组、机器人等的搜索。
- */
+interface SearchListener {
+  /**
+   * 当搜索结果返回时调用的回调函数
+   */
+  onSearchResult: () => void
+
+  /**
+   * 当群组搜索结果返回时调用的回调函数
+   */
+  onSearchGroupResult: () => void
+
+  /**
+   * 当机器人搜索结果返回时调用的回调函数
+   */
+  onSearchRobotResult: () => void
+
+  /**
+   * 当本地信息搜索结果返回时调用的回调函数
+   */
+  onSearchLocalInfoResult: () => void
+
+  /**
+   * 当好友聊天信息搜索结果返回时调用的回调函数
+   */
+  onSearchBuddyChatInfoResult: () => void
+
+  /**
+   * 当联系人搜索结果返回时调用的回调函数
+   */
+  onSearchContactResult: () => void
+
+  /**
+   * 当群组聊天信息搜索结果返回时调用的回调函数
+   */
+  onSearchGroupChatInfoResult: () => void
+
+  /**
+   * 当聊天关键字搜索结果返回时调用的回调函数
+   */
+  onSearchChatsKeywordsResult: () => void
+
+  /**
+   * 当消息关键字搜索结果返回时调用的回调函数
+   */
+  onSearchMsgKeywordsResult: () => void
+
+  /**
+   * 当文件关键字搜索结果返回时调用的回调函数
+   */
+  onSearchFileKeywordsResult: () => void
+
+  /**
+   * 当@我的聊天结果返回时调用的回调函数
+   */
+  onSearchAtMeChatsResult: () => void
+
+  /**
+   * 当@我的消息结果返回时调用的回调函数
+   */
+  onSearchAtMeMsgsResult: () => void
+
+  /**
+   * 当缓存搜索结果返回时调用的回调函数
+   */
+  onSearchCacheResult: () => void
+}
+
 export interface NodeIKernelSearchService {
   /**
    * 添加内核搜索监听器
    * @param listener - 监听器函数
    */
-  addKernelSearchListener(listener: (data: any) => void): void
+  addKernelSearchListener(listener: SearchListener): void
 
   /**
    * 移除内核搜索监听器
    * @param listener - 要移除的监听器函数
    */
-  removeKernelSearchListener(listener: (data: any) => void): void
+  removeKernelSearchListener(listener: SearchListener): void
 
   /**
    * 搜索陌生人

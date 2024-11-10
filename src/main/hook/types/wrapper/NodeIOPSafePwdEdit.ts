@@ -5,8 +5,8 @@ interface KerneIOPSafePwdEditEventCallbacks {
 
 export interface NodeIOPSafePwdEdit {
   // 添加和移除密码编辑监听器
-  addOPSafePwdEditListener(listener: KernelOPSafePwdEditEventCallbacks): void // 根据实际事件类型替换 `any`
-  removeOPSafePwdEditListener(listener: KernelOPSafePwdEditEventCallbacks): void // 根据实际事件类型替换 `any`
+  addOPSafePwdEditListener(listener: KerneIOPSafePwdEditEventCallbacks): void // 根据实际事件类型替换 `any`
+  removeOPSafePwdEditListener(listener: KerneIOPSafePwdEditEventCallbacks): void // 根据实际事件类型替换 `any`
 
   // 初始化和加载
   init(params: string): boolean // 初始化

@@ -154,3 +154,9 @@ export interface Element {
 
 // 1私聊，2群聊
 export type ChatType = 1 | 2
+
+export interface PeerInfo {
+  chatType: ChatType
+  peerUid: string
+  guildId: string
+}

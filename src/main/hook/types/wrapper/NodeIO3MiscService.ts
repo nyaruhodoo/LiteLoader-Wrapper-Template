@@ -1,5 +1,5 @@
 interface KerneIO3MiscServiceEventCallbacks {
-  getOnAmgomDataPiece(params: string): void
+  getOnAmgomDataPiece(params: string): boolean
 }
 
 export interface NodeIO3MiscService {

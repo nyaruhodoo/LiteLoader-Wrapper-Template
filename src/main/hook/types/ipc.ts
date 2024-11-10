@@ -1,4 +1,4 @@
-type SendRequestType<T = any> = [
+export type SendRequestType<T = any> = [
   string,
   {
     type: 'request'
@@ -12,7 +12,7 @@ type SendRequestType<T = any> = [
     }
   ]
 ]
-type SendResponseType<T = any> = [
+export type SendResponseType<T = any> = [
   string,
   {
     callbackId: string
@@ -25,7 +25,7 @@ type SendResponseType<T = any> = [
 
 export type SendArgsType = SendRequestType | SendResponseType
 
-type IPCMessageRequestType<T = [...any]> = [
+export type IPCMessageRequestType<T extends unknown[] = [...any]> = [
   {
     frameId: number
     processId: number
@@ -41,7 +41,7 @@ type IPCMessageRequestType<T = [...any]> = [
     [string?, ...T]
   ]
 ]
-type IPCMessageResponseType<T = any> = [
+export type IPCMessageResponseType<T = any> = [
   IPCMessageRequestType[0],
   IPCMessageRequestType[1],
   IPCMessageRequestType[2],

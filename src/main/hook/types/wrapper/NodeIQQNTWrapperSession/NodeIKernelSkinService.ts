@@ -1,15 +1,27 @@
+interface SkinListener {
+  /**
+   * 当主题信息发生变化时调用的回调函数
+   */
+  onThemeInfoChange: () => void
+
+  /**
+   * 当自定义主题信息发生变化时调用的回调函数
+   */
+  onCustomThemeInfoChange: () => void
+}
+
 export interface NodeIKernelSkinService {
   /**
    * 注册一个监听器，用于接收皮肤相关的事件通知。
    * @param listener - 事件监听器函数
    */
-  addKernelSkinListener(listener: () => void): void
+  addKernelSkinListener(listener: SkinListener): void
 
   /**
    * 移除已注册的皮肤事件监听器。
    * @param listener - 要移除的事件监听器函数
    */
-  removeKernelSkinListener(listener: () => void): void
+  removeKernelSkinListener(listener: SkinListener): void
 
   /**
    * 获取系统主题列表。

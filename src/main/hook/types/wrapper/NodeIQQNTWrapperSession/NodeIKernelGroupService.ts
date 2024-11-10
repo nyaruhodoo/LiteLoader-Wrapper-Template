@@ -30,7 +30,7 @@ interface KernelGroupListener {
   /**
    * 群组未读通知计数更新时触发
    */
-  onGroupNotifiesUnreadCountUpdated: () => void
+  onGroupNotifiesUnreadCountUpdated: (p1: boolean, p2: string, p3: number) => boolean
 
   /**
    * 群组详细信息变化时触发
@@ -80,7 +80,53 @@ interface KernelGroupListener {
   /**
    * 成员信息变化时触发
    */
-  onMemberInfoChange: () => void
+  onMemberInfoChange: (
+    p1: string,
+    p2: number,
+    p3: Map<
+      string,
+      {
+        uid: string
+        qid: string
+        uin: string
+        nick: string
+        remark: string
+        cardType: number
+        cardName: string
+        role: number
+        avatarPath: string
+        shutUpTime: number
+        isDelete: false
+        isSpecialConcerned: false
+        isSpecialShield: false
+        isRobot: false
+        groupHonor: Uint8Array
+        memberRealLevel: number
+        memberLevel: number
+        globalGroupLevel: number
+        globalGroupPoint: number
+        memberTitleId: number
+        memberSpecialTitle: string
+        specialTitleExpireTime: string
+        userShowFlag: number
+        userShowFlagNew: number
+        richFlag: number
+        mssVipType: number
+        bigClubLevel: number
+        bigClubFlag: number
+        autoRemark: string
+        creditLevel: number
+        joinTime: number
+        lastSpeakTime: number
+        memberFlag: number
+        memberFlagExt: number
+        memberMobileFlag: number
+        memberFlagExt2: number
+        isSpecialShielded: boolean
+        cardNameId: number
+      }
+    >
+  ) => boolean
 
   /**
    * 搜索成员变化时触发
@@ -232,7 +278,7 @@ export interface NodeIKernelGroupService {
    * @param memberId - 成员的唯一标识符
    * @returns - 返回成员的详细信息
    */
-  getMemberInfo(memberId: string): any
+  getMemberInfo(p1: string, p2: [string], p3: boolean): WrapperAsyncResponse
 
   /**
    * 获取缓存的成员信息。

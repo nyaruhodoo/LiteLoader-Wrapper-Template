@@ -86,7 +86,7 @@ export interface Wrapper {
 }
 export type WrapperPaths = DeepPath<Wrapper>
 export type WrapperResponsePaths = `${WrapperPaths}:response`
-export type WrapperResolvePath<T extends WrapperPaths> = ResolvePath<Wrapper, T>
+export type WrapperResolvePath<T extends string> = T extends WrapperPaths ? ResolvePath<Wrapper, T> : never
 
 // 监听器会包含调用参数以及响应结果
 export type WrapperEventMap = {

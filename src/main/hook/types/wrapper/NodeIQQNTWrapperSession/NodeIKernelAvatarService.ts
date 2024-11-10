@@ -1,6 +1,28 @@
+interface AvatarListener {
+  /**
+   * 当用户头像发生变化时调用的回调函数
+   */
+  onAvatarChanged: () => void
+
+  /**
+   * 当群组头像发生变化时调用的回调函数
+   */
+  onGroupAvatarChanged: () => void
+
+  /**
+   * 当群组的头像（群组图标）发生变化时调用的回调函数
+   */
+  onGroupPortraitChanged: () => void
+
+  /**
+   * 当特定用户（通过 UIN）头像发生变化时调用的回调函数
+   */
+  onAvatarChangedForUin: () => void
+}
+
 export interface NodeIKernelAvatarService {
-  addAvatarListener(listener: unknown): void
-  removeAvatarListener(listener: unknown): void
+  addAvatarListener(listener: AvatarListener): string
+  removeAvatarListener(listener: AvatarListener): string
   getAvatarPath(p1: string, p2: number): string
   forceDownloadAvatar(uid: string): Promise<void>
   getGroupAvatarPath(groupId: string): string

@@ -16,6 +16,21 @@ import type { NodeIKernelBaseEmojiService } from './NodeIKernelBaseEmojiService'
 import type { NodeIKernelSearchService } from './NodeIKernelSearchService'
 import type { NodeIKernelProfileLikeService } from './NodeIKernelProfileLikeService'
 import type { NodeIKernelGroupService } from './NodeIKernelGroupService'
+import type { NodeIKernelCollectionService } from './NodeIKernelCollectionService'
+import type { NodeIKernelDirectSessionService } from './NodeIKernelDirectSessionService'
+import type { NodeIKernelFeedService } from './NodeIKernelFeedService'
+import type { NodeIKernelFileAssistantService } from './NodeIKernelFileAssistantService'
+import type { NodeIGuildHotUpdateService } from './NodeIGuildHotUpdateService'
+import type { NodeIKernelGuildService } from './NodeIKernelGuildService'
+import type { NodeIKernelLockService } from './NodeIKernelLockService'
+import type { NodeIKernelMsgBackupService } from './NodeIKernelMsgBackupService'
+import type { NodeIKernelOnlineStatusService } from './NodeIKernelOnlineStatusService'
+import type { NodeIKernelQiDianService } from './NodeIKernelQiDianService'
+import type { NodeIKernelQQPlayService } from './NodeIKernelQQPlayService'
+import type { NodeIKernelRecentContactService } from './NodeIKernelRecentContactService'
+import type { NodeIKernelRemotingService } from './NodeIKernelRemotingService'
+import type { NodeIKernelStorageCleanService } from './NodeIKernelStorageCleanService'
+import type { NodeIKernelWiFiPhotoClientService } from './NodeIKernelWiFiPhotoClientService'
 
 export interface NodeIQQNTWrapperSession {
   // 各种服务获取方法
@@ -33,41 +48,41 @@ export interface NodeIQQNTWrapperSession {
   getGroupService(): NodeIKernelGroupService
   getMsgService(): NodeIKernelMsgService
   getRichMediaService(): any
-  getRecentContactService(): any
+  getRecentContactService(): NodeIKernelRecentContactService
   getConfigMgrService(): NodeIKernelConfigMgrService
-  getDirectSessionService(): any
+  getDirectSessionService(): NodeIKernelDirectSessionService
   getRDeliveryService(): any
   getAvatarService(): NodeIKernelAvatarService
-  getFeedChannelService(): any
+  getFeedChannelService(): NodeIKernelFeedService
   getNewFeedChannelService(): any
   getYellowFaceService(): any
-  getCollectionService(): any
+  getCollectionService(): NodeIKernelCollectionService
   getSettingService(): NodeIKernelSettingService
-  getStorageCleanService(): any
-  getQiDianService(): any
-  getFileAssistantService(): any
-  getGuildService(): any
+  getStorageCleanService(): NodeIKernelStorageCleanService
+  getQiDianService(): NodeIKernelQiDianService
+  getFileAssistantService(): NodeIKernelFileAssistantService
+  getGuildService(): NodeIKernelGuildService
   getSkinService(): NodeIKernelSkinService
   getTestPerformanceService(): any
-  getQQPlayService(): any
+  getQQPlayService(): NodeIKernelQQPlayService
   getDbToolsService(): any
   getUixConvertService(): any
-  getWiFiPhotoClientService(): any
-  getOnlineStatusService(): any
-  getRemotingService(): any
+  getWiFiPhotoClientService(): NodeIKernelWiFiPhotoClientService
+  getOnlineStatusService(): NodeIKernelOnlineStatusService
+  getRemotingService(): NodeIKernelRemotingService
   getRobotService(): NodeIKernelRobotService
   getGroupTabService(): any
   getGroupSchoolService(): any
   getLiteBusinessService(): any
   getBdhUploadService(): any
   getGuildMsgService(): any
-  getLockService(): any
+  getLockService(): NodeIKernelLockService
   getEmojiService(): any
   getBaseEmojiService(): NodeIKernelBaseEmojiService
   getMSFService(): NodeIKernelMSFService
   getNodeMiscService(): NodeIKernelNodeMiscService
-  getGuildHotUpdateService(): any
-  getMsgBackupService(): any
+  getGuildHotUpdateService(): NodeIGuildHotUpdateService
+  getMsgBackupService(): NodeIKernelMsgBackupService
   getAVSDKService(): NodeIKernelAVSDKService
 
   // 会话管理方法

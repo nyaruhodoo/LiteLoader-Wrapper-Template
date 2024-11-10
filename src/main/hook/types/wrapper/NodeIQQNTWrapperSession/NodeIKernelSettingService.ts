@@ -1,9 +1,41 @@
+interface SettingListener {
+  /**
+   * 当隐私设置发生变化时调用的回调函数
+   */
+  onPrivacySettingChanged: () => void
+
+  /**
+   * 当验证信息发生变化时调用的回调函数
+   */
+  onVerifyInfoChange: () => void
+
+  /**
+   * 当数值类型的设置发生变化时调用的回调函数
+   */
+  onNumSettingChanged: () => void
+
+  /**
+   * 当字符串类型的设置发生变化时调用的回调函数
+   */
+  onStrSettingChanged: () => void
+
+  /**
+   * 当缓冲区类型的设置发生变化时调用的回调函数
+   */
+  onBufferSettingChanged: () => void
+
+  /**
+   * 当清理缓存进度发生变化时调用的回调函数
+   */
+  onCleanCacheProgressChanged: () => void
+}
+
 export interface NodeIKernelSettingService {
   /** 添加内核设置监听器 */
-  addKernelSettingListener(listener: unknown): void
+  addKernelSettingListener(listener: SettingListener): void
 
   /** 移除内核设置监听器 */
-  removeKernelSettingListener(listener: unknown): void
+  removeKernelSettingListener(listener: SettingListener): void
 
   /** 设置隐私设置 */
   setPrivacySetting(setting: any): Promise<void>

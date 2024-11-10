@@ -260,7 +260,9 @@ export interface NodeIKernelNodeMiscService {
   needRelaunchQQGuild(): boolean // 检查是否需要重新启动 QQ 公会
   getNodeAndQQIPCVersions(): { nodeVersion: string; qqIPCVersion: string } // 获取 Node 和 QQ IPC 版本
   getRelaunchParams(): any // 获取重新启动参数
-  writeClipboard(data: string): void // 写入剪贴板
+  writeClipboard(p1: string): WrapperAsyncResponse<{
+    callId: string
+  }> // 写入剪贴板
   checkIfHaveAvailableSidecarDevice(): boolean // 检查是否有可用的侧车设备
   openSidecarMenu(): void // 打开侧车菜单
   startNewAppInstance(appId: string): void // 启动新应用实例

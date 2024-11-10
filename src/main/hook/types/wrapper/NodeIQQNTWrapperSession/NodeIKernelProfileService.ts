@@ -1,9 +1,85 @@
+interface ProfileListener {
+  /**
+   * 当用户的简单资料信息发生变化时调用的回调函数
+   */
+  onProfileSimpleChanged: (
+    params: Map<
+      string,
+      {
+        uid: string
+        uin: string
+        coreInfo: null
+        baseInfo: null
+        status: null
+        vasInfo: null
+        relationFlags: null
+        otherFlags: null
+        intimate: null
+      }
+    >
+  ) => void
+
+  /**
+   * 当用户的详细信息发生变化时调用的回调函数
+   */
+  onUserDetailInfoChanged: () => void
+
+  /**
+   * 当用户的状态更新时调用的回调函数
+   */
+  onStatusUpdate: (
+    params: Map<
+      string,
+      {
+        uid: string
+        uin: string
+        status: number
+        extStatus: number
+        batteryStatus: number
+        termType: number
+        netType: number
+        iconType: number
+        customStatus: null
+        setTime: string
+        specialFlag: number
+        abiFlag: number
+        eNetworkType: number
+        showName: string
+        termDesc: string
+        musicInfo: { buf: Uint8Array }
+        extOnlineBusinessInfo: {
+          buf: Uint8Array
+          customStatus: null
+          videoBizInfo: { cid: string; tvUrl: string; synchType: string }
+          videoInfo: { name: string }
+        }
+        extBuffer: { buf: Uint8Array }
+      }
+    >
+  ) => void
+
+  /**
+   * 当用户的状态字段异步更新时调用的回调函数
+   */
+  onStatusAsyncFieldUpdate: () => void
+
+  /**
+   * 当用户自身的状态变化时调用的回调函数
+   */
+  onSelfStatusChanged: () => void
+
+  /**
+   * 当陌生人备注信息发生变化时调用的回调函数
+   */
+  onStrangerRemarkChanged: () => void
+}
+
 export interface NodeIKernelProfileService {
   /** 添加用户资料监听器 */
-  addKernelProfileListener(listener: unknown): void
+  addKernelProfileListener(listener: ProfileListener): void
 
   /** 为 UI 缓存添加用户资料监听器 */
-  addKernelProfileListenerForUICache(listener: unknown): void
+  addKernelProfileListenerForUICache(listener: ProfileListener): void
 
   /** 移除用户资料监听器 */
   removeKernelProfileListener(listener: unknown): void
@@ -66,7 +142,7 @@ export interface NodeIKernelProfileService {
   getZplanAvatarInfos(uin: string): Promise<any>
 
   /** 获取状态 */
-  getStatus(uin: string): Promise<string>
+  getStatus(uin: string): WrapperAsyncResponse
 
   /** 开始状态轮询 */
   startStatusPolling(uin: string): void
