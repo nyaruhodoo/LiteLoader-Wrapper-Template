@@ -175,9 +175,11 @@ class StarWand {
   }
 }
 
-export const hookWrapper = (config?: ConfigType) => {
+export const starWand = new StarWand()
+
+export const hookWrapper = (config: ConfigType = {}) => {
   const { promise, resolve } = Promise.withResolvers<StarWand>()
-  starWand = new StarWand(undefined, undefined, config)
+  starWand.config = config
 
   Process.dlopen = new Proxy(Process.dlopen, {
     apply(
@@ -274,10 +276,8 @@ export const hookWrapper = (config?: ConfigType) => {
 
   // 等待登录
   starWand.wrapperEmitter.once(WrapperEnum.onQRCodeLoginSucceed, () => {
-    resolve(starWand!)
+    resolve(starWand)
   })
 
   return promise
 }
-
-export let starWand: StarWand | undefined
