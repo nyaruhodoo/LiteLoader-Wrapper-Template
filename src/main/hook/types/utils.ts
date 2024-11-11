@@ -18,7 +18,7 @@ type ReturnTypeOrSelf<T, K extends string = ''> = K extends `${infer _}Service` 
 // 用于递增深度的元组类型
 type IncrementDepth<T extends any[]> = [...T, any]
 // 便于从 wrapper 路径中排除无意义的组合
-type Filter<T extends string> = T extends `${infer BeforePart}/${string}`
+type Filter<T extends string> = T extends `${infer _}/${string}`
   ? T extends `${string}${'Service' | 'get' | 'create' | 'Listener'}`
     ? never
     : T

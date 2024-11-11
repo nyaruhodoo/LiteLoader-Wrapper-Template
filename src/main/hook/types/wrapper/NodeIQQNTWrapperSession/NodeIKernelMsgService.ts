@@ -611,11 +611,7 @@ export interface NodeIKernelMsgService {
       type: number
       cnt: number
     }
-    peer: {
-      chatType: ChatType
-      peerUid: string
-      guildId: string
-    }
+    peer: PeerInfo
     related_to_me_string: string
     related_to_me_cnt: number
     last_related_to_me_type: number

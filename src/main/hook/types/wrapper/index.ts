@@ -90,7 +90,7 @@ export type WrapperResolvePath<T extends string> = T extends WrapperPaths ? Reso
 
 // 监听器会包含调用参数以及响应结果
 export type WrapperEventMap = {
-  [K in WrapperPaths as K extends string ? K : never]: [
+  [K in WrapperPaths]: [
     {
       applyRet: Awaited<ReturnType<WrapperResolvePath<K>>>
       params: Parameters<WrapperResolvePath<K>>

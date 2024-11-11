@@ -3,7 +3,6 @@ import Process from 'node:process'
 import { inspect } from 'node:util'
 import type { Wrapper, WrapperPaths, WrapperEventMap, WrapperInterceptors } from './types/wrapper'
 import type { NodeIQQNTWrapperSession } from './types/wrapper/NodeIQQNTWrapperSession'
-import { WrapperEnum } from '../enum/WrapperEnum'
 
 interface ConfigType {
   /**
@@ -234,7 +233,7 @@ export const hookWrapper = (config: ConfigType = {}) => {
 
                       if (typeof applyRet !== 'object') return applyRet
 
-                      const hookApplyRet = starWand?.hookInstance({
+                      const hookApplyRet = starWand.hookInstance({
                         instance: applyRet,
                         rootKey: key
                       })
@@ -258,7 +257,7 @@ export const hookWrapper = (config: ConfigType = {}) => {
                     argArray
                   })
 
-                  return starWand!.hookInstance({
+                  return starWand.hookInstance({
                     instance: instance,
                     rootKey: wrapperApiName
                   })
@@ -274,8 +273,12 @@ export const hookWrapper = (config: ConfigType = {}) => {
     }
   })
 
-  // 等待登录
-  starWand.wrapperEmitter.once(WrapperEnum.onQRCodeLoginSucceed, () => {
+  /**
+   * 新版本经测试发现，登陆成功后并不能直接调用 session 相关 api，有一个延迟存在
+   * 或许等 QQ 自己调用是一个比较稳妥的办法
+   */
+  // @ts-expect-error 类型体操那边忽略了service相关，那么就无视掉这里
+  starWand.wrapperEmitter.once('NodeIQQNTWrapperSession/create/getMsgService', () => {
     resolve(starWand)
   })
 
