@@ -28,7 +28,12 @@ export interface NodeIKernelTipOffService {
    * 获取 pskey，用于验证。
    * @returns - 返回 pskey 的字符串
    */
-  getPskey(): string
+  getPskey(
+    p1: string[],
+    p2: boolean
+  ): WrapperAsyncResponse<{
+    domainPskeyMap: Map<string, string>
+  }>
 
   /**
    * 发送举报的 JavaScript 数据。

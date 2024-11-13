@@ -1,3 +1,5 @@
+import type { VasInfo } from './User'
+
 interface ProfileListener {
   /**
    * 当用户的简单资料信息发生变化时调用的回调函数
@@ -172,7 +174,7 @@ export interface NodeIKernelProfileService {
   getOtherFlag(uin: string): Promise<any>
 
   /** 获取增值服务信息 */
-  getVasInfo(uin: string): Promise<any>
+  getVasInfo(p1: string, p2: string[]): Map<string, VasInfo>
 
   /** 获取亲密度信息 */
   getIntimate(uin: string): Promise<number>

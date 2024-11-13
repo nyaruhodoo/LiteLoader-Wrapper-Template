@@ -681,7 +681,7 @@ export interface NodeIKernelMsgService {
   addRecentUsedFace(faceId: string): void // 添加最近使用的表情
   getRecentUsedFaceList(): any[] // 获取最近使用的表情列表
   getMarketEmoticonEncryptKeys(): any // 获取市场表情加密密钥
-  downloadEmojiPic(emojiId: string): void // 下载表情图片
+  downloadEmojiPic(emojiId: string, p2: [], p3: number, p4: Map<unknown, unknown>): void // 下载表情图片
   deleteFavEmoji(emojiId: string): void // 删除收藏表情
   modifyFavEmojiDesc(emojiId: string, desc: string): void // 修改收藏表情描述
   queryFavEmojiByDesc(desc: string): any[] // 根据描述查询收藏表情
