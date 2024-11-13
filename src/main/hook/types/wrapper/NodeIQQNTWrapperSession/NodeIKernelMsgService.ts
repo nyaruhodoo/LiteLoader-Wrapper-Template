@@ -755,7 +755,10 @@ export interface NodeIKernelMsgService {
   insertGameResultAsMsgToDb(result: any): void // 将游戏结果作为消息插入数据库
   getMultiMsg(): any[] // 获取多条消息
   setDraft(draft: any): void // 设置草稿
-  getDraft(): any // 获取草稿
+  getDraft(params: PeerInfo): WrapperAsyncResponse<{
+    msgElements: []
+    draftTime: string
+  }> // 获取草稿
   deleteDraft(draftId: string): void // 删除草稿
   getRecentHiddenSesionList(): any[] // 获取最近隐藏的会话列表
   setRecentHiddenSession(sessionId: string): void // 设置最近隐藏的会话

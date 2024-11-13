@@ -67,10 +67,21 @@ export interface NodeIKernelSkinService {
   getThemeHistory(): any[]
 
   /**
-   * 预览主题。
-   * @param themeId - 主题的唯一标识符
+   * 预览主题
    */
-  previewTheme(themeId: string): void
+  previewTheme(
+    p1: number,
+    p2: undefined,
+    p3: undefined
+  ): {
+    tokenMap: Map<
+      string,
+      {
+        lightColor: number
+        darkColor: number
+      }
+    >
+  }
 
   /**
    * 从图片中获取主题信息。

@@ -1,4 +1,4 @@
-import type { VasInfo } from './User'
+import type { CoreInfo, UserStatus, VasInfo, BaseInfo, RelationFlags } from './User'
 
 interface ProfileListener {
   /**
@@ -10,11 +10,11 @@ interface ProfileListener {
       {
         uid: string
         uin: string
-        coreInfo: null
-        baseInfo: null
-        status: null
-        vasInfo: null
-        relationFlags: null
+        coreInfo: null | CoreInfo
+        baseInfo: null | BaseInfo
+        status: null | UserStatus
+        vasInfo: null | VasInfo
+        relationFlags: null | RelationFlags
         otherFlags: null
         intimate: null
       }

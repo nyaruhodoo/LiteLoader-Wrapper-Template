@@ -94,7 +94,20 @@ export interface NodeIQQNTWrapperSession {
   getSessionId(): string // 获取会话 ID
   updateTicket(ticket: any): void // 更新票据
   onLine(): void // 上线
-  offLine(): void // 下线
+  offLine(params: {
+    deviceInfo: {
+      guid: string
+      buildVer: string
+      localId: number
+      devName: string
+      devType: string
+      vendorName: string
+      osVer: string
+      vendorOsName: string
+      setMute: boolean
+      vendorType: number
+    }
+  }): WrapperAsyncResponse // 下线
   offLineSync(): void // 同步下线
   onSendOidbReply(): void // 发送 OIDB 回复
   onSendSSOReply(): void // 发送 SSO 回复
