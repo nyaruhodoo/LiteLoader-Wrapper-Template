@@ -1,1 +1,1 @@
-export { onSettingWindowCreated } from '@/renderer/configPage'
+export { onSettingWindowCreated } from '@/renderer/configView'

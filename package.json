@@ -8,24 +8,29 @@
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
-    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck:web": "vue-tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "build": "electron-vite build",
     "check:build": "npm run typecheck && electron-vite build"
   },
   "dependencies": {
-    "@electron-toolkit/utils": "^3.0.0"
+    "@electron-toolkit/utils": "^3.0.0",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@types/node": "^20.14.8",
+    "@vitejs/plugin-vue": "^5.2.0",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-vue": "^9.31.0",
     "prettier": "^3.3.3",
     "sass": "^1.77.8",
     "typescript": "^5.5.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vite-plugin-vue-style-bundler": "^1.0.9",
+    "vue-tsc": "^2.1.10"
   }
 }

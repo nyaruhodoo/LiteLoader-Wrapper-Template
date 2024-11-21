@@ -1,5 +1,7 @@
 import { join, resolve } from 'node:path'
 import { defineConfig } from 'electron-vite'
+import Vue from '@vitejs/plugin-vue'
+import StyleBundler from 'vite-plugin-vue-style-bundler'
 import type { UserConfig } from 'vite'
 
 const baseConfig: UserConfig = {
@@ -38,6 +40,11 @@ export default defineConfig({
         fileName: () => 'index.js'
       },
       minify: 'esbuild'
+    },
+    plugins: [Vue(), StyleBundler()],
+    define: {
+      // 没搞明白到底是谁的bug，按理说不该再依赖这个才对
+      'process.env': {}
     }
   }
 })
