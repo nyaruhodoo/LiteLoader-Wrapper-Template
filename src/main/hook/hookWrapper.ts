@@ -1,7 +1,14 @@
 import { EventEmitter } from 'node:events'
 import Process from 'node:process'
 import { inspect } from 'node:util'
-import type { Wrapper, WrapperPaths, WrapperEventMap, WrapperInterceptors } from './types/wrapper'
+import type {
+  Wrapper,
+  WrapperPaths,
+  WrapperEventMap,
+  WrapperInterceptors,
+  ListenerPaths,
+  WrapperResolvePath
+} from './types/wrapper'
 import type { NodeIQQNTWrapperSession } from './types/wrapper/NodeIQQNTWrapperSession'
 
 interface ConfigType {
@@ -30,6 +37,8 @@ interface ConfigType {
 // 抱歉，没什么很特别的原因就是很中意这个名字
 class StarWand {
   wrapperEmitter = new EventEmitter<WrapperEventMap>()
+  // 非必须的情况下不给很详细的类型，因为真的很卡 /(ㄒoㄒ)/~~
+  #listenerMap = new Map<string, Set<Record<string, (...args: unknown[]) => void>>>()
   constructor(
     public Wrapper?: Wrapper,
     public Session?: NodeIQQNTWrapperSession,
@@ -109,20 +118,40 @@ class StarWand {
           })
           if (isReturn) return
 
-          // 对于监听器参数也进行hook
+          // 特殊处理 Listener
           if (key.endsWith('Listener')) {
-            args[0] = this.hookInstance({
-              instance: args[0],
-              rootKey: key
-            })
+            // add
+            if (p.startsWith('add')) {
+              const listenerList = this.#listenerMap.get(key)
+
+              // 别忘了 hook 监听器
+              args[0] = this.hookInstance({
+                instance: args[0],
+                rootKey: key
+              })
+
+              if (listenerList) {
+                listenerList.add(args[0])
+              } else {
+                this.#listenerMap.set(key, new Set([args[0]]))
+              }
+            }
+            // remove，据说只有大量Q群的情况下才会触发
+            else {
+              const listenerList = this.#listenerMap.get(key.replace('/remove', '/add'))
+
+              if (listenerList) {
+                listenerList.delete(args[0])
+              }
+            }
           }
 
-          // hook args
+          // 请求拦截器
           args = this.config.eventInterceptors?.[key]?.(args) ?? args
 
           let applyRet = instance[p](...args)
 
-          // hook applyRet
+          // 响应拦截器
           applyRet = this.config.eventInterceptors?.[`${key}:response`]?.({ applyRet, params: args }) ?? applyRet
 
           // Service 需额外处理
@@ -170,6 +199,27 @@ class StarWand {
           return applyRet
         }
       }
+    })
+  }
+
+  /**
+   * 调用 QQ 内部 Listener 事件
+   */
+  dispatchListener<T extends ListenerPaths>(
+    eventPath: T,
+    params: Parameters<WrapperResolvePath<T>>
+  ): ReturnType<WrapperResolvePath<T>>[] {
+    const lastIndex = eventPath.lastIndexOf('/')
+    const listenerName = eventPath.slice(0, lastIndex)
+    const eventName = eventPath.slice(lastIndex + 1)
+
+    const listenerList = this.#listenerMap.get(listenerName)
+
+    if (!listenerList) throw new Error('监听器尚未绑定，请确认参数是否正确')
+
+    return [...listenerList].map((callbacks) => {
+      if (!callbacks[eventName]) throw new Error('未找到目标监听器')
+      return callbacks[eventName](...params) as any
     })
   }
 }

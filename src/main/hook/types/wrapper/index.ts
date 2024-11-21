@@ -15,6 +15,8 @@ type WrapperApiWithMethods<T = unknown, IncludeMethods extends ('get' | 'create'
   [K in IncludeMethods[number]]?: () => T
 }
 
+type FilterListener<T extends string> = T extends `${string}Listener/${string}` ? T : never
+
 export interface Wrapper {
   NodeIKernelECDHService: WrapperApiWithMethods
   NodeIQQNTWrapperEngine: WrapperApiWithMethods<NodeIQQNTWrapperEngine>
@@ -87,6 +89,7 @@ export interface Wrapper {
 export type WrapperPaths = DeepPath<Wrapper>
 export type WrapperResponsePaths = `${WrapperPaths}:response`
 export type WrapperResolvePath<T extends string> = T extends WrapperPaths ? ResolvePath<Wrapper, T> : never
+export type ListenerPaths = FilterListener<WrapperPaths>
 
 // 监听器会包含调用参数以及响应结果
 export type WrapperEventMap = {
