@@ -16,7 +16,6 @@
 ## 一些待办事项
 
 - [ ] 提供更完整的 wrapper 类型
-- [ ] 提供 listener 事件函数
 - [ ] 修复 watch 打包
 - [ ] 支持更多组件用于丰富配置选项，或许会考虑直接引入 Vue
 - [ ] 支持账号独立配置文件
@@ -31,7 +30,8 @@
 - 使用 `eventBlacklist` 禁止 QQ 执行某些逻辑
 - 使用 `eventInterceptors` 修改 QQ 调用内部函数时的参数以及返回值
 - 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
-- 使用 `Session` 直接调用 QQ 内部 API
+- 使用 `Session` 调用 QQ 内部 API
+- 使用 `dispatchListener` 调用 QQ 内部的监听器事件
 - 快速创建插件配置相关UI(有点精简)
 
 ## 一个不怎么样的文档
@@ -148,7 +148,6 @@ export const videoFileEventInterceptors = {
 具体也请查看[新手文档](https://github.com/nyaruhodoo/LiteLoader-BeginnerTutorial?tab=readme-ov-file#%E5%9C%A8-ipc-%E5%81%9A%E7%82%B9%E4%BB%80%E4%B9%88)  
 项目里保留了一部分 IPC 相关的内容，因为我更喜欢 wrapper 所以是属于废弃部分，但难免还是有人会用所以就放在那里了  
 除非 wrapper 彻底挂壁那么我可能会考虑再捡回来...
-
 
 ## 使用时的一些杂项内容
 
