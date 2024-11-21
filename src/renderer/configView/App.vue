@@ -5,7 +5,7 @@
 </template>
 
 <style scoped bundle lang="scss">
-div {
-  background-color: red;
-}
+  div {
+    background-color: red;
+  }
 </style>
