@@ -1,9 +1,9 @@
 module.exports = {
   extends: [
     'eslint:recommended',
-    'plugin:vue/vue3-recommended',
     '@electron-toolkit/eslint-config-ts/recommended',
-    'prettier'
+    'plugin:vue/vue3-recommended',
+    '@vue/eslint-config-prettier'
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',

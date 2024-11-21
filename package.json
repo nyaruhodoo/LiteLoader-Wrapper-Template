@@ -1,7 +1,7 @@
 {
   "name": "liteloader-wrapper-template",
   "version": "0.0.1",
-  "description": "个人自用插件开发模板",
+  "description": "自用插件开发模板",
   "main": "./out/main/index.js",
   "author": "nyaruhodoo",
   "scripts": {
@@ -22,6 +22,7 @@
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@types/node": "^20.14.8",
     "@vitejs/plugin-vue": "^5.2.0",
+    "@vue/eslint-config-prettier": "^10.1.0",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
