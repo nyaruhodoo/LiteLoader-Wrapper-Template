@@ -64,4 +64,4 @@
   </ConfigList>
 </template>
 
-<style scoped></style>
+<style scoped bundle></style>
