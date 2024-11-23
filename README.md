@@ -136,12 +136,12 @@ export const videoFileEventInterceptors = {
 
 #### 组件样式的一些注意事项
 
-尽量使用 tailwindcss 去添加样式  
+个人建议使用 tailwindcss 添加样式  
 或许你会更喜欢 Vue 的 `scoped-style` 但很遗憾当前有一些 BUG，因为使用了库模式导致无法自动注入 CSS ，为了解决这个问题我使用了 `vite-plugin-vue-style-bundler` 来把 CSS 和 JS 编译到同一个文件中
 ```vue
 <style scoped bundle></style>
 ```
-使用很简单，但是它无法和 `Web Components` 同时存在(会导致编译错误)，想解决的话需要从社区找到代替插件或者不使用 LL 提供的组件
+使用很简单，但是它无法和 `Web Components` 同时存在(会导致编译错误)，想解决的话需要从社区找到代替插件或者**不直接使用 LL 提供的组件**  
 
 ## 类型(很很很很重要)
 
