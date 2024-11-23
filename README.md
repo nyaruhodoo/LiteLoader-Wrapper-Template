@@ -166,8 +166,7 @@ export const videoFileEventInterceptors = {
 
 ### 修改 manifest & defaultConfig & createConfigViewConfig
 
-没什么好说的，你总得有自己的插件名字和插件配置不是？  
-需要注意的是 `manifest.json` 中的 `slug` 属性，代码中依赖了该属性，对于命名也有一些要求，需要符合 `customElements.define()` 的参数
+没什么好说的，你总得有自己的插件名字和插件配置不是？
 
 ### 实时更新配置文件
 
