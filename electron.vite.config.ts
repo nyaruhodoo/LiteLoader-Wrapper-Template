@@ -41,7 +41,17 @@ export default defineConfig({
       },
       minify: 'esbuild'
     },
-    plugins: [Vue(), StyleBundler()],
+    plugins: [
+      Vue({
+        template: {
+          compilerOptions: {
+            // 将所有带短横线的标签名都视为自定义元素
+            isCustomElement: (tag) => tag.includes('-')
+          }
+        }
+      }),
+      StyleBundler()
+    ],
     define: {
       // 没搞明白到底是谁的bug，按理说不该再依赖这个才对
       'process.env': {}

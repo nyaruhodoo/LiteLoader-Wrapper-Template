@@ -17,7 +17,7 @@ export class Utils {
    */
   static async updateConfig(config: ConfigType) {
     await LiteLoader.api.config.set(manifest.slug, config)
-    this.log('Config已更新', JSON.stringify(config))
+    this.log('Config已更新', JSON.stringify(config, null, 2))
   }
 
   /**

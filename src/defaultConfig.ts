@@ -1,7 +1,11 @@
 export interface ConfigType {
-  test: boolean
+  switchh: boolean
+  select: string
+  input: string
 }
 
 export const defaultConfig: ConfigType = {
-  test: false
+  switchh: false,
+  select: '',
+  input: ''
 }

@@ -17,7 +17,6 @@
 
 - [ ] 提供更完整的 wrapper 类型
 - [ ] 修复 watch 打包
-- [ ] 支持更多组件用于丰富配置选项，或许会考虑直接引入 Vue
 - [ ] 支持账号独立配置文件
 - [ ] 使用其他构建工具替换 Vite，目前所用的这一套还是太笨重了，在很多地方都存在不少问题
 - [ ] 集成插件自更新功能
@@ -32,7 +31,7 @@
 - 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
 - 使用 `Session` 调用 QQ 内部 API
 - 使用 `dispatchListener` 调用 QQ 内部的监听器事件
-- 快速创建插件配置相关UI(有点精简)
+- 使用 Vue 快速搭建组件 UI
 
 ## 一个不怎么样的文档
 
@@ -48,6 +47,7 @@
 
 ```ts
 class StarWand {
+  #listenerMap = new Map<string, Set<Record<string, (...args: unknown[]) => void>>>()
   wrapperEmitter = new EventEmitter<WrapperEventMap>()
   constructor(
     public Wrapper?: Wrapper,
