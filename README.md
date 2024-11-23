@@ -22,7 +22,6 @@
 - [ ] 集成插件自更新功能
 
 ~~仓库是早上建的，坑是晚上弃的~~  
-~~其实待办事项是写给你们看的，等你们来添砖加瓦~~
 
 ## 它具体可以做些什么？
 
@@ -31,7 +30,7 @@
 - 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
 - 使用 `Session` 调用 QQ 内部 API
 - 使用 `dispatchListener` 调用 QQ 内部的监听器事件
-- 使用 Vue 快速搭建组件 UI
+- 使用 `Vue` `tailwindcss` 快速搭建组件 UI
 
 ## 一个不怎么样的文档
 
@@ -115,8 +114,7 @@ starWand.Session?.getMsgService().sendMsg()
 
 返回值是可选的，如果没有指定返回值那么会通过 `??` 默认返回原参数  
 同时你需要额外注意返回值的类型，虽然我已经在类型上限制了你，但一定会有人尝试跳过  
-如果参数或返回值与原本值类型不同，这可能会导致崩溃，我主要想说的是同步和异步的问题，也就是本该是同步的代码你不能给它一个 promise  
-如果你的代码需要通过异步去生成一个参数，那么你可以参考我的插件
+如果说依赖了某些异步行为生成参数，那么最好的做法是中断本次调用，之后通过 session 再次还原逻辑
 
 ```ts
 export const videoFileEventInterceptors = {
@@ -129,6 +127,21 @@ export const videoFileEventInterceptors = {
   }
 }
 ```
+
+### Vue
+
+为了便于开发该模板已集成 Vue ，并且封装了一些[基础组件](https://github.com/nyaruhodoo/LiteLoader-Wrapper-Template/blob/master/src/renderer/configView/App.vue)  
+代码很简单，仅仅是将LL提供的一些组件进行二次封装便于直接使用`v-model`  
+如果你觉得满足不了你，完全可以安装其他基于 Vue 的组件库进行开发
+
+#### 组件样式的一些注意事项
+
+尽量使用 tailwindcss 去添加样式  
+或许你会更喜欢 Vue 的 `scoped-style` 但很遗憾当前有一些 BUG，因为使用了库模式导致无法自动注入 CSS ，为了解决这个问题我使用了 `vite-plugin-vue-style-bundler` 来把 CSS 和 JS 编译到同一个文件中
+```vue
+<style scoped bundle></style>
+```
+使用很简单，但是它无法和 `Web Components` 同时存在(会导致编译错误)，想解决的话需要从社区找到代替插件或者不使用 LL 提供的组件
 
 ## 类型(很很很很重要)
 
