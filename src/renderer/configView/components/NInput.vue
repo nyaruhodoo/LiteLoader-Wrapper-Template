@@ -1,11 +1,14 @@
 <script lang="ts" setup>
+  import type { InputHTMLAttributes } from 'vue'
+
   const model = defineModel<string>()
+  const inputProps = defineProps<InputHTMLAttributes>()
 </script>
 
 <template>
   <div
-    class="border border-solid border-[var(--border\_dark)] focus-within:border-[var(--brand\_standard)] rounded-[4px] text-[12px] text-center leading-[26px]"
+    class="border border-solid border-[var(--border\_dark)] focus-within:border-[var(--brand\_standard)] rounded-[4px] text-[12px] leading-[26px] px-[8px]"
   >
-    <input v-model="model" class="px-[8px]" type="text" />
+    <input v-model="model" class="text-center" v-bind="inputProps" />
   </div>
 </template>
