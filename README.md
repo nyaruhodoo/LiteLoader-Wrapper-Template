@@ -30,7 +30,7 @@
 - 使用 `wrapperEmitter` 监听 QQ 内部的所有事件，拦截器也可以做到只不过 emitter 更加易用
 - 使用 `Session` 调用 QQ 内部 API
 - 使用 `dispatchListener` 调用 QQ 内部的监听器事件
-- 使用 `Vue` `tailwindcss` 快速搭建组件 UI
+- 使用 `Vue` `tailwindcss` 快速搭建 UI
 
 ## 一个不怎么样的文档
 
