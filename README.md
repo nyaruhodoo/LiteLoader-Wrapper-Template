@@ -164,7 +164,7 @@ export const videoFileEventInterceptors = {
 
 ## 使用时的一些杂项内容
 
-### 修改 manifest & defaultConfig & createConfigViewConfig
+### 修改 manifest & defaultConfig
 
 没什么好说的，你总得有自己的插件名字和插件配置不是？
 
