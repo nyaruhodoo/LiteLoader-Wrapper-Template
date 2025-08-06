@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { watch, onMounted, useTemplateRef } from 'vue'
+  import { watch, useTemplateRef } from 'vue'
 
   type Options = {
     label: string
@@ -37,7 +37,6 @@
     return ret
   }
 
-  // FIX: 渲染时机导致的未正确初始化title
   watch(model, (val) => {
     ;(input.value as any)._title.value = val
   })

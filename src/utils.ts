@@ -54,20 +54,4 @@ export class Utils {
   static log(...args) {
     console.log(`${manifest.slug}:`, ...args)
   }
-
-  /**
-   * 生成随机整数
-   */
-  static randomInteger(min: number, max: number) {
-    const rand = min + Math.random() * (max + 1 - min)
-    return Math.floor(rand)
-  }
-
-  /**
-   * 返回一个指定时间后决议为 resolve 的 promise
-   */
-  static wait(millisecond: number) {
-    if (millisecond <= 0) return
-    return new Promise((resolve) => setTimeout(resolve, millisecond))
-  }
 }
